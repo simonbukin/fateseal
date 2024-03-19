@@ -101,7 +101,7 @@ function DeckEntry() {
         placeholder="Deck name"
         value={deckName}
         size="md"
-        className="mb-2 text-slate-800"
+        className="mb-4 text-slate-800"
         label="Your deck's name"
         onChange={(e) => setDeckName(e.target.value)}
       />
@@ -115,7 +115,7 @@ function DeckEntry() {
         description="Paste your decklist below, in the MTGO format."
         placeholder={`1 Imperial Recruiter\n2 Mountain`}
       />
-      {errorCards && (
+      {errorCards && errorCards.length > 0 ? (
         <ul>
           <p>Card{errorCards.length === 1 ? "" : "s"} not found:</p>
           {errorCards.map(({ errorCard, suggestion }) => {
@@ -130,24 +130,24 @@ function DeckEntry() {
             );
           })}
         </ul>
-      )}
+      ) : null}
       <Button
-        className="my-2"
+        className="my-4"
         onClick={handleParseClick}
         fullWidth
-        variant="filled"
-        color="violet"
+        variant="gradient"
+        gradient={{ from: "pink", to: "grape", deg: 90 }}
         size="md"
       >
         Parse
       </Button>
       <Button
         disabled={!cards || cards.length < 1}
-        className="my-2"
+        className="my-4"
         onClick={handleExportClick}
         fullWidth
-        variant="filled"
-        color="violet"
+        variant="gradient"
+        gradient={{ from: "indigo", to: "cyan", deg: 90 }}
         size="md"
       >
         Export
