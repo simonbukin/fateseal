@@ -1,13 +1,18 @@
-export type Card = {
+export type RawCard = {
   name: string;
   quantity: number;
 };
 
-export function parseDeckList(deck: string[]): Card[] {
+export type ScryfallCard = RawCard & {
+  id: string;
+  image: string;
+};
+
+export function parseDeckList(deck: string[]): RawCard[] {
   return deck.map((line) => parseLine(line));
 }
 
-function parseLine(line: string): Card {
+function parseLine(line: string): RawCard {
   const [unparsedQuantity, ...nameArray] = line.split(" ");
 
   const name = nameArray.join(" ");
