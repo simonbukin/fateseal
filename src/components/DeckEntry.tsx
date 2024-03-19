@@ -3,9 +3,9 @@
 import { RawCard, ScryfallCard, parseDeckList } from "@/utils/deck";
 import { useEffect, useState } from "react";
 import { Button, Textarea, TextInput } from "@mantine/core";
-import Image from "next/image";
 import { deckToObjects } from "@/utils/ttExport";
 import Fuse from "fuse.js";
+import MTGCard from "./MTGCard";
 
 function DeckEntry() {
   const [deckList, setDeckList] = useState("");
@@ -159,13 +159,7 @@ function DeckEntry() {
           {cards.map((card, i) => {
             return (
               <li key={card.id + i}>
-                <Image
-                  className="rounded-sm"
-                  src={card.imageUrl}
-                  alt={`The Magic card ${card.name}`}
-                  width={667}
-                  height={930}
-                />
+                <MTGCard card={card} />
               </li>
             );
           })}
