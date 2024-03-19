@@ -14,7 +14,7 @@ function DeckEntry() {
   const [cards, setCards] = useState<ScryfallCard[]>();
   const [errorCards, setErrorCards] = useState<
     {
-      errorCard: RawCard;
+      errorCardName: string;
       suggestion?: string;
     }[]
   >();
@@ -34,7 +34,7 @@ function DeckEntry() {
   }, []);
 
   function handleParseClick() {
-    const errorCards = [];
+    const errorCards: Set<string> = new Set();
     const resultingCards: ScryfallCard[] = [];
     if (!cardData) return;
     const parsedDeckList: RawCard[] = parseDeckList(
@@ -53,10 +53,10 @@ function DeckEntry() {
             imageUrl,
           });
         } else {
-          errorCards.push(card);
+          errorCards.add(card.name);
         }
       } catch (e) {
-        errorCards.push(card);
+        errorCards.add(card.name);
       }
     }
     setCards(resultingCards);
@@ -68,11 +68,11 @@ function DeckEntry() {
       cardData.map((card: ScryfallCard) => card.name),
       fuseOptions,
     );
-    const errorsAndSuggestions = errorCards.map((errorCard) => {
-      const suggestion = fuse.search(errorCard.name);
+    const errorsAndSuggestions = Array.from(errorCards).map((name) => {
+      const suggestion = fuse.search(name);
       const suggestionString = suggestion.length ? suggestion[0].item : "";
       return {
-        errorCard,
+        errorCardName: name,
         suggestion: suggestionString,
       };
     });
@@ -88,7 +88,7 @@ function DeckEntry() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${deckName}.json`;
+      link.download = `${deckName || "fateseal"}.json`;
       document.body.appendChild(link);
       link.click();
       window.URL.revokeObjectURL(url);
@@ -118,13 +118,13 @@ function DeckEntry() {
       {errorCards && errorCards.length > 0 ? (
         <ul>
           <p>Card{errorCards.length === 1 ? "" : "s"} not found:</p>
-          {errorCards.map(({ errorCard, suggestion }) => {
+          {errorCards.map(({ errorCardName, suggestion }) => {
             return (
               <li
                 key={Math.random()}
                 className="font-semibold text-red-500"
               >
-                {errorCard.name}
+                {errorCardName}
                 {suggestion ? `, did you mean ${suggestion}?` : ""}
               </li>
             );
