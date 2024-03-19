@@ -1,0 +1,138 @@
+{
+  "ObjectStates": [
+    {
+      "Name": "DeckCustom",
+      "ContainedObjects": [
+        {
+          "CardID": 100,
+          "Name": "Card",
+          "Nickname": "Plains",
+          "Transform": {
+            "posX": 0,
+            "posY": 0,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 180,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          }
+        },
+        {
+          "CardID": 200,
+          "Name": "Card",
+          "Nickname": "Island",
+          "Transform": {
+            "posX": 0,
+            "posY": 0,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 180,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          }
+        },
+        {
+          "CardID": 300,
+          "Name": "Card",
+          "Nickname": "Swamp",
+          "Transform": {
+            "posX": 0,
+            "posY": 0,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 180,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          }
+        },
+        {
+          "CardID": 400,
+          "Name": "Card",
+          "Nickname": "Mountain",
+          "Transform": {
+            "posX": 0,
+            "posY": 0,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 180,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          }
+        },
+        {
+          "CardID": 500,
+          "Name": "Card",
+          "Nickname": "Forest",
+          "Transform": {
+            "posX": 0,
+            "posY": 0,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 180,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          }
+        }
+      ],
+      "DeckIDs": [100, 200, 300, 400, 500],
+      "CustomDeck": {
+        "1": {
+          "FaceURL": "https://cards.scryfall.io/large/front/0/0/00293ce4-3475-4064-8510-9e8c02faf3bf.jpg?1592674050",
+          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
+          "NumHeight": 1,
+          "NumWidth": 1,
+          "BackIsHidden": true
+        },
+        "2": {
+          "FaceURL": "https://cards.scryfall.io/large/front/0/0/000f1f50-08e5-4d83-8159-98f06a0e2279.jpg?1572491305",
+          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
+          "NumHeight": 1,
+          "NumWidth": 1,
+          "BackIsHidden": true
+        },
+        "3": {
+          "FaceURL": "https://cards.scryfall.io/large/front/0/0/00030770-5e99-4943-819d-8d807c24cc14.jpg?1600716281",
+          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
+          "NumHeight": 1,
+          "NumWidth": 1,
+          "BackIsHidden": true
+        },
+        "4": {
+          "FaceURL": "https://cards.scryfall.io/large/front/0/0/005a993c-5111-4364-9fba-75b3d94a8296.jpg?1559591904",
+          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
+          "NumHeight": 1,
+          "NumWidth": 1,
+          "BackIsHidden": true
+        },
+        "5": {
+          "FaceURL": "https://cards.scryfall.io/large/front/0/0/0031d026-9e9a-46f6-8204-1acfee8b8809.jpg?1561894880",
+          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
+          "NumHeight": 1,
+          "NumWidth": 1,
+          "BackIsHidden": true
+        }
+      },
+      "Transform": {
+        "posX": 0,
+        "posY": 1,
+        "posZ": 0,
+        "rotX": 0,
+        "rotY": 180,
+        "rotZ": 180,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
+    }
+  ]
+}

@@ -2,16 +2,22 @@
 
 import { RawCard, ScryfallCard, parseDeckList } from "@/utils/deck";
 import { useEffect, useState } from "react";
-import { Button, Checkbox, Textarea } from "@mantine/core";
+import { Button, Textarea, TextInput } from "@mantine/core";
 import Image from "next/image";
+import { deckToObjects } from "@/utils/ttExport";
+import Fuse from "fuse.js";
 
 function DeckEntry() {
   const [deckList, setDeckList] = useState("");
-  const [parsedDeckList, setParsedDeckList] = useState<RawCard[]>();
-  const [showParsed, setShowParsed] = useState(false);
+  const [deckName, setDeckName] = useState("");
   const [cardData, setCardData] = useState<ScryfallCard[]>();
   const [cards, setCards] = useState<ScryfallCard[]>();
-  const [errorCards, setErrorCards] = useState<RawCard[]>();
+  const [errorCards, setErrorCards] = useState<
+    {
+      errorCard: RawCard;
+      suggestion?: string;
+    }[]
+  >();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,77 +33,106 @@ function DeckEntry() {
     fetchData();
   }, []);
 
-  useEffect(
-    function parse() {
-      setParsedDeckList(parseDeckList(deckList.split("\n")));
-    },
-    [deckList],
-  );
-
   function handleParseClick() {
     const errorCards = [];
     const resultingCards: ScryfallCard[] = [];
-    if (!parsedDeckList || !cardData) return;
+    if (!cardData) return;
+    const parsedDeckList: RawCard[] = parseDeckList(
+      deckList.split("\n").filter((line) => line.length !== 0),
+    );
     for (const card of parsedDeckList || []) {
-      const result = cardData.filter(
-        (testCard) => testCard.name === card.name,
-      );
-      console.log(result);
-      if (result.length === 1) {
-        const { name, quantity, id, image } = result[0];
-        resultingCards.push({
-          name,
-          quantity,
-          id,
-          image,
-        });
-      } else {
+      try {
+        const result = cardData.filter(
+          (testCard) => testCard.name === card.name,
+        );
+        if (result.length === 1) {
+          const { name, id, imageUrl } = result[0];
+          resultingCards.push({
+            name,
+            id,
+            imageUrl,
+          });
+        } else {
+          errorCards.push(card);
+        }
+      } catch (e) {
         errorCards.push(card);
       }
     }
     setCards(resultingCards);
-    setErrorCards(errorCards);
+
+    const fuseOptions = {
+      threshold: 0.4,
+    };
+    const fuse = new Fuse(
+      cardData.map((card: ScryfallCard) => card.name),
+      fuseOptions,
+    );
+    const errorsAndSuggestions = errorCards.map((errorCard) => {
+      const suggestion = fuse.search(errorCard.name);
+      const suggestionString = suggestion.length ? suggestion[0].item : "";
+      return {
+        errorCard,
+        suggestion: suggestionString,
+      };
+    });
+    setErrorCards(errorsAndSuggestions);
   }
 
-  function handleExportClick() {}
+  function handleExportClick() {
+    if (cards) {
+      const deck = deckToObjects(cards);
+      const blob = new Blob([JSON.stringify(deck, null, 2)], {
+        type: "application/json",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${deckName}.json`;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+    }
+  }
 
   return (
-    <div className="relative max-w-lg">
+    <div className="relative">
+      <TextInput
+        placeholder="Deck name"
+        value={deckName}
+        size="md"
+        className="mb-2 text-slate-800"
+        label="Your deck's name"
+        onChange={(e) => setDeckName(e.target.value)}
+      />
       <Textarea
         value={deckList}
         onChange={(e) => setDeckList(e.target.value)}
         className="text-slate-800"
         size="md"
-        minRows={3}
+        minRows={5}
         label="Your decklist"
         description="Paste your decklist below, in the MTGO format."
         placeholder={`1 Imperial Recruiter\n2 Mountain`}
       />
-      <Checkbox
-        className="my-4"
-        label="Show parsed decklist"
-        checked={showParsed}
-        onChange={(event) => setShowParsed(event.currentTarget.checked)}
-        description="For nerds!"
-        color="violet"
-        variant="outline"
-        size="md"
-      />
-      {showParsed && (
-        <div className="my-4">
-          {parsedDeckList &&
-            parsedDeckList.map(({ name, quantity }) => {
-              return (
-                <div key={name}>
-                  <h1>
-                    {quantity} of {name}
-                  </h1>
-                </div>
-              );
-            })}
-        </div>
+      {errorCards && (
+        <ul>
+          <p>Card{errorCards.length === 1 ? "" : "s"} not found:</p>
+          {errorCards.map(({ errorCard, suggestion }) => {
+            return (
+              <li
+                key={Math.random()}
+                className="font-semibold text-red-500"
+              >
+                {errorCard.name}
+                {suggestion ? `, did you mean ${suggestion}?` : ""}
+              </li>
+            );
+          })}
+        </ul>
       )}
       <Button
+        className="my-2"
         onClick={handleParseClick}
         fullWidth
         variant="filled"
@@ -106,25 +141,9 @@ function DeckEntry() {
       >
         Parse
       </Button>
-      {cards && (
-        <ul className="absolute grid grid-cols-3 gap-2">
-          {cards.map((card) => {
-            return (
-              <li key={card.id}>
-                <Image
-                  className="rounded-sm"
-                  src={card.image}
-                  alt="A Magic card"
-                  width={667}
-                  height={930}
-                />
-              </li>
-            );
-          })}
-        </ul>
-      )}
       <Button
-        className="mt-2"
+        disabled={!cards || cards.length < 1}
+        className="my-2"
         onClick={handleExportClick}
         fullWidth
         variant="filled"
@@ -133,6 +152,23 @@ function DeckEntry() {
       >
         Export
       </Button>
+      {cards && (
+        <ul className="absolute grid grid-cols-3 gap-2">
+          {cards.map((card, i) => {
+            return (
+              <li key={card.id + i}>
+                <Image
+                  className="rounded-sm"
+                  src={card.imageUrl}
+                  alt={`The Magic card ${card.name}`}
+                  width={667}
+                  height={930}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }
