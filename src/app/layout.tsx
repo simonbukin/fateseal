@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Rosario } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 
-const inter = Inter({ subsets: ["latin"] });
+const rosario = Rosario({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Fateseal",
@@ -21,7 +21,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className={inter.className}>
+      <body className={`${rosario.className} bg-stone-100`}>
         <MantineProvider>{children}</MantineProvider>
       </body>
     </html>

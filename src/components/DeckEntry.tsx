@@ -96,7 +96,7 @@ function DeckEntry() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <TextInput
         placeholder="Deck name"
         value={deckName}
@@ -137,17 +137,19 @@ function DeckEntry() {
         fullWidth
         variant="gradient"
         gradient={{ from: "pink", to: "grape", deg: 90 }}
+        color="purple"
         size="md"
       >
         Parse
       </Button>
       <Button
         disabled={!cards || cards.length < 1}
-        className="my-4"
+        className="my-4 outline outline-1 outline-slate-300"
         onClick={handleExportClick}
         fullWidth
         variant="gradient"
         gradient={{ from: "indigo", to: "cyan", deg: 90 }}
+        color="purple"
         size="md"
       >
         Export
