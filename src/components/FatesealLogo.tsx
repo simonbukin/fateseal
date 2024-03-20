@@ -20,20 +20,21 @@ const manaToColor = {
   forest: "rgb(0, 115, 62)",
 };
 
-const pickRandom = (collection: any[]) => {
+const pickRandom = <T,>(collection: T[]): T => {
   return collection[Math.floor(Math.random() * collection.length)];
 };
 
 function FatesealLogo() {
   const [hovering, setHovering] = useState(false);
-  const [currentMana, setCurrentMana] = useState<MANA>(MANA.SWAMP);
+  const [currentMana, setCurrentMana] = useState<string>("swamp");
 
   const onHover = () => {
     setHovering(true);
     const mana = pickRandom(
       Object.values(MANA).filter((val) => typeof val !== "number"),
     );
-    setCurrentMana(mana);
+    const manaString = mana.toString().toLocaleLowerCase();
+    setCurrentMana(manaString);
   };
 
   return (
