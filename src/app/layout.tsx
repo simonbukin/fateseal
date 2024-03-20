@@ -20,9 +20,10 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <ColorSchemeScript />
+        <link rel="shortcut icon" href="/favicon.svg" />
       </head>
       <body className={`${rosario.className} bg-stone-100`}>
-        <MantineProvider>{children}</MantineProvider>
+        <MantineProvider theme={{}}>{children}</MantineProvider>
       </body>
     </html>
   );
