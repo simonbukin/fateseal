@@ -16,7 +16,9 @@ export default function Home() {
               className={`${epilogue.className} relative my-8 text-5xl font-bold`}
             >
               fateseal
-              <InfoHoverCard />
+              <div className="relative -top-5">
+                <InfoHoverCard />
+              </div>
             </h1>
           </div>
           <FatesealLogo />

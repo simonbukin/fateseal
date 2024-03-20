@@ -155,7 +155,7 @@ function DeckEntry() {
         Export
       </Button>
       {cards && (
-        <ul className="absolute grid grid-cols-3 gap-2">
+        <ul className="absolute grid grid-cols-2 gap-2">
           {cards.map((card, i) => {
             return (
               <li key={card.id + i}>
