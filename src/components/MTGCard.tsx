@@ -1,7 +1,6 @@
 import { ScryfallCard } from "@/utils/deck";
 import Image from "next/image";
 import { useState } from "react";
-import { Skeleton } from "@mantine/core";
 
 interface IMTGCardProps {
   card: ScryfallCard;
@@ -13,7 +12,7 @@ function MTGCard({ card }: IMTGCardProps) {
   return (
     <div>
       <Image
-        className="rounded-sm"
+        className="rounded-md"
         src={card.imageUrl}
         alt={`The Magic card ${card.name}`}
         onLoad={() => {
@@ -22,7 +21,6 @@ function MTGCard({ card }: IMTGCardProps) {
         width={667}
         height={930}
       />
-      {!loaded && <Skeleton width={667} height={930} />}
     </div>
   );
 }

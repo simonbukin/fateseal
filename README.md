@@ -14,3 +14,7 @@ $ npm run dev
 ```
 
 Then you just need to navigate to `localhost:3000` and the app is available to use.
+
+## Acknowledgements
+
+MTG-related SVGs courtesy of [Investigamer/mtg-vectors](https://github.com/Investigamer/mtg-vectors)

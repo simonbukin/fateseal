@@ -1,7 +1,8 @@
 import { Epilogue } from "next/font/google";
 import DeckEntry from "../components/DeckEntry";
-import Image from "next/image";
+
 import InfoHoverCard from "@/components/InfoHoverCard";
+import FatesealLogo from "@/components/FatesealLogo";
 
 const epilogue = Epilogue({ subsets: ["latin"] });
 
@@ -18,13 +19,7 @@ export default function Home() {
               <InfoHoverCard />
             </h1>
           </div>
-          <Image
-            src="/logo.svg"
-            alt="Fateseal logo"
-            width={96}
-            height={96}
-            className="mr-10 transition-all hover:rotate-12"
-          />
+          <FatesealLogo />
         </div>
         <DeckEntry />
       </div>
