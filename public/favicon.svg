@@ -1,12 +1,38 @@
-<svg width="122" height="120" viewBox="0 0 122 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect y="55.2418" width="71" height="99" rx="3" transform="rotate(-50 0 55.2418)" fill="#E4E4E4"/>
-<rect x="9.86182" y="54.379" width="57" height="85" rx="2" transform="rotate(-50 9.86182 54.379)" fill="white"/>
-<rect x="7.64463" y="30.0059" width="71" height="99" rx="3" transform="rotate(-25 7.64463 30.0059)" fill="#BEBEBE"/>
-<rect x="16.9471" y="33.3917" width="57" height="85" rx="2" transform="rotate(-25 16.9471 33.3917)" fill="white"/>
-<rect x="25.2382" y="10.3652" width="71" height="99" rx="3" fill="#919191"/>
-<rect x="32.2382" y="17.3652" width="57" height="85" rx="2" fill="white"/>
-<rect x="49.4838" width="71" height="99" rx="3" transform="rotate(25 49.4838 0)" fill="#5A5A5A"/>
-<rect x="52.8697" y="9.30248" width="57" height="85" rx="2" transform="rotate(25 52.8697 9.30248)" fill="white"/>
-<rect x="75.8384" y="0.852619" width="71" height="99" rx="3" transform="rotate(50 75.8384 0.852619)" fill="#393939"/>
-<rect x="74.9756" y="10.7144" width="57" height="85" rx="2" transform="rotate(50 74.9756 10.7144)" fill="white"/>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_28)">
+<rect width="128" height="128" fill="white"/>
+<mask id="mask0_6_28" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="-53" y="-36" width="133" height="151">
+<rect width="76.4407" height="129.264" transform="matrix(0.851317 0.524652 0.525226 -0.850963 -53 73.9988)" fill="white"/>
+</mask>
+<g mask="url(#mask0_6_28)">
+<path d="M11.5 63.8078C11.5 34.9282 34.9446 11.5 63.8855 11.5C92.8264 11.5 116.271 34.9282 116.271 63.8078C116.271 92.6873 92.8264 116.116 63.8855 116.116C34.9446 116.116 11.5 92.6873 11.5 63.8078Z" stroke="url(#paint0_linear_6_28)" stroke-width="15"/>
+</g>
+<mask id="mask1_6_28" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="46" y="0" width="115" height="147">
+<rect width="81.8124" height="129.264" transform="matrix(-0.963096 -0.269159 -0.269809 0.962914 160.556 22.0971)" fill="white"/>
+</mask>
+<g mask="url(#mask1_6_28)">
+<path d="M116.271 63.8078C116.271 92.6873 92.8265 116.116 63.8855 116.116C34.9446 116.116 11.5 92.6873 11.5 63.8078C11.5 34.9282 34.9446 11.5 63.8855 11.5C92.8265 11.5 116.271 34.9282 116.271 63.8078Z" stroke="url(#paint1_linear_6_28)" stroke-width="15"/>
+</g>
+<rect x="78.8384" y="5" width="71" height="99" rx="3" transform="rotate(50 78.8384 5)" fill="#393939"/>
+<rect x="75.3472" y="26.192" width="43.0201" height="66.4072" rx="2" transform="rotate(50 75.3472 26.192)" fill="white"/>
+<g clip-path="url(#clip1_6_28)">
+<path d="M64.5 47C67.9079 54.2559 73.7441 60.0921 81 63.5C73.7441 66.9079 67.9079 72.7441 64.5 80C61.0921 72.7441 55.2559 66.9079 48 63.5C55.2559 60.0921 61.0921 54.2559 64.5 47ZM64.5 53.1875C62.4334 57.7663 58.7663 61.4334 54.1875 63.5C58.7663 65.5666 62.4334 69.2338 64.5 73.8125C66.5666 69.2338 70.2338 65.5666 74.8125 63.5C70.2338 61.4334 66.5666 57.7663 64.5 53.1875Z" fill="#393939"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_6_28" x1="15.9771" y1="68.2933" x2="77.7916" y2="15.8823" gradientUnits="userSpaceOnUse">
+<stop stop-opacity="0"/>
+<stop offset="1"/>
+</linearGradient>
+<linearGradient id="paint1_linear_6_28" x1="111.794" y1="59.3222" x2="49.9794" y2="111.733" gradientUnits="userSpaceOnUse">
+<stop stop-opacity="0"/>
+<stop offset="1"/>
+</linearGradient>
+<clipPath id="clip0_6_28">
+<rect width="128" height="128" fill="white"/>
+</clipPath>
+<clipPath id="clip1_6_28">
+<rect width="33" height="33" fill="white" transform="translate(48 47)"/>
+</clipPath>
+</defs>
 </svg>
