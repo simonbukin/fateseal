@@ -1,3 +1,4 @@
+import { BasicCard } from "@/types/cards";
 import { ScryfallCard } from "./deck";
 
 export type CustomDeck = {
@@ -51,7 +52,7 @@ export const DEFAULT_TRANSFORM_OPTIONS: TransformOptions = {
   scaleZ: 1,
 };
 
-export function deckToObjects(deck: ScryfallCard[]): CustomDeck {
+export function deckToObjects(deck: BasicCard[]): CustomDeck {
   const customDeckTransform: TransformOptions = {
     ...DEFAULT_TRANSFORM_OPTIONS,
     posY: 1,
@@ -78,13 +79,11 @@ export function generateDeckIds(totalIds: number): number[] {
     throw new RangeError("totalIds must be positive");
   }
   return Array.from({ length: totalIds }).map(
-    (item, index) => (index + 1) * 100,
+    (item, index) => (index + 1) * 100
   );
 }
 
-export function cardToCustomDeckObject(
-  card: ScryfallCard,
-): CustomDeckObject {
+export function cardToCustomDeckObject(card: BasicCard): CustomDeckObject {
   return {
     FaceURL: card.imageUrl,
     BackURL: "https://i.imgur.com/Hg8CwwU.jpeg",
@@ -95,8 +94,8 @@ export function cardToCustomDeckObject(
 }
 
 export function cardToContainedObject(
-  card: ScryfallCard,
-  id: number,
+  card: BasicCard,
+  id: number
 ): ContainedObject {
   return {
     CardID: id,

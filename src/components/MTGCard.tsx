@@ -1,9 +1,9 @@
-import { ScryfallCard } from "@/utils/deck";
+import { BasicCard } from "@/types/cards";
 import Image from "next/image";
 import { useState } from "react";
 
 interface IMTGCardProps {
-  card: ScryfallCard;
+  card: BasicCard;
 }
 
 function MTGCard({ card }: IMTGCardProps) {

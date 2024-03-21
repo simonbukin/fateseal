@@ -1,23 +1,19 @@
 "use client";
 
-import { RawCard, ScryfallCard, parseDeckList } from "@/utils/deck";
 import { useEffect, useState } from "react";
 import { Button, Textarea, TextInput } from "@mantine/core";
 import { deckToObjects } from "@/utils/ttExport";
-import Fuse from "fuse.js";
 import MTGCard from "./MTGCard";
+import { BasicCard, RawCard, ScryfallCard } from "@/types/cards";
+import { parseDeckList } from "@/utils/deck";
 
 function DeckEntry() {
   const [deckList, setDeckList] = useState("");
   const [deckName, setDeckName] = useState("");
-  const [cardData, setCardData] = useState<ScryfallCard[]>();
-  const [cards, setCards] = useState<ScryfallCard[]>();
-  const [errorCards, setErrorCards] = useState<
-    {
-      errorCardName: string;
-      suggestion?: string;
-    }[]
-  >();
+  const [cardData, setCardData] = useState<{ [card: string]: ScryfallCard }>();
+  const [cards, setCards] = useState<BasicCard[]>();
+  const [cardImages, setCardImages] = useState<BasicCard[]>();
+  const [extras, setExtras] = useState<BasicCard[]>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,23 +31,70 @@ function DeckEntry() {
 
   function handleParseClick() {
     const errorCards: Set<string> = new Set();
-    const resultingCards: ScryfallCard[] = [];
+    const cardImages: BasicCard[] = [];
+    const resultingCards: BasicCard[] = [];
+    const extraCards: BasicCard[] = [];
     if (!cardData) return;
     const parsedDeckList: RawCard[] = parseDeckList(
-      deckList.split("\n").filter((line) => line.length !== 0),
+      deckList.split("\n").filter((line) => line.length !== 0)
     );
-    for (const card of parsedDeckList || []) {
+    for (const card of parsedDeckList) {
       try {
-        const result = cardData.filter(
-          (testCard) => testCard.name === card.name,
-        );
-        if (result.length === 1) {
-          const { name, id, imageUrl } = result[0];
-          resultingCards.push({
-            name,
-            id,
-            imageUrl,
+        const result = cardData[card.name];
+
+        if (result) {
+          const prints = result.prints;
+
+          let setNarrow;
+          let collectorNarrow;
+          if (card.set) {
+            setNarrow = prints.filter((print) => print.set === card.set);
+            if (card.collectorNumber) {
+              collectorNarrow = setNarrow.filter(
+                (print) => print.collectorNumber === `${card.collectorNumber}`
+              );
+            }
+          }
+
+          // console.log(card.name);
+          // console.log(prints.length);
+          // console.log(setNarrow);
+          // console.log(collectorNarrow);
+
+          let print = prints[0];
+          if (card.set && setNarrow) {
+            print = setNarrow[0];
+            if (card.collectorNumber && collectorNarrow) {
+              print = collectorNarrow[0];
+            }
+          }
+
+          const resultingCard = {
+            name: result.name,
+            imageUrl: print.imageUrl,
+            associatedCards: print.associatedCards,
+            allParts: print.associatedCards,
+          };
+          cardImages.push({ imageUrl: print.imageUrl, name: result.name });
+          resultingCards.push(resultingCard);
+          const extraCardsParsed =
+            (print.associatedCards &&
+              print.associatedCards
+                .map((part) => {
+                  return cardData[part.name];
+                })
+                .filter((card) => card)) ||
+            [];
+          const extraCardPicked = extraCardsParsed.map((card) => {
+            return card.prints[0];
           });
+          const extraCardsToBasics = extraCardPicked.map((card) => {
+            return {
+              name: result.name,
+              imageUrl: card.imageUrl,
+            };
+          });
+          extraCards.push(...extraCardsToBasics);
         } else {
           errorCards.add(card.name);
         }
@@ -60,23 +103,8 @@ function DeckEntry() {
       }
     }
     setCards(resultingCards);
-
-    const fuseOptions = {
-      threshold: 0.4,
-    };
-    const fuse = new Fuse(
-      cardData.map((card: ScryfallCard) => card.name),
-      fuseOptions,
-    );
-    const errorsAndSuggestions = Array.from(errorCards).map((name) => {
-      const suggestion = fuse.search(name);
-      const suggestionString = suggestion.length ? suggestion[0].item : "";
-      return {
-        errorCardName: name,
-        suggestion: suggestionString,
-      };
-    });
-    setErrorCards(errorsAndSuggestions);
+    setCardImages(cardImages);
+    setExtras(extraCards);
   }
 
   function handleExportClick() {
@@ -115,22 +143,6 @@ function DeckEntry() {
         description="Paste your decklist below, in the MTGO format."
         placeholder={`1 Imperial Recruiter\n2 Mountain`}
       />
-      {errorCards && errorCards.length > 0 ? (
-        <ul>
-          <p>Card{errorCards.length === 1 ? "" : "s"} not found:</p>
-          {errorCards.map(({ errorCardName, suggestion }) => {
-            return (
-              <li
-                key={Math.random()}
-                className="font-semibold text-red-500"
-              >
-                {errorCardName}
-                {suggestion ? `, did you mean ${suggestion}?` : ""}
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
       <Button
         className="my-4"
         onClick={handleParseClick}
@@ -154,15 +166,23 @@ function DeckEntry() {
       >
         Export
       </Button>
-      {cards && (
+      {cardImages && (
         <ul className="absolute grid grid-cols-2 gap-2">
-          {cards.map((card, i) => {
+          {cardImages.map((card, i) => {
             return (
-              <li key={card.id + i}>
+              <li key={card.imageUrl + i}>
                 <MTGCard card={card} />
               </li>
             );
           })}
+          {extras &&
+            extras.map((card, i) => {
+              return (
+                <li key={card.imageUrl + i}>
+                  <MTGCard card={card} />
+                </li>
+              );
+            })}
         </ul>
       )}
     </div>
