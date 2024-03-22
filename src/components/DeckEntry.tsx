@@ -175,18 +175,6 @@ function DeckEntry() {
               </li>
             );
           })}
-          {errorCards.length > 1 && (
-            <Button
-              onClick={() => {
-                errorCards.forEach((card, i) => fixError(card, i));
-              }}
-              className="mt-3"
-              fullWidth
-              size="md"
-            >
-              Fix all
-            </Button>
-          )}
         </ul>
       )}
       <Button
