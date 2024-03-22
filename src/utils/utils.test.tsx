@@ -126,5 +126,33 @@ describe("deck.tsx", () => {
           .flat()
       );
     });
+    it("filters out etchings", () => {
+      const arcaneSignetObject: RawCard = {
+        quantity: 1,
+        name: "Arcane Signet",
+        set: "sld",
+        collectorNumber: "1492★",
+      };
+      const parsedLine = parseLine("1 Arcane Signet (SLD) 1492★ *F*");
+      expect(parsedLine).toEqual(
+        Array.from({ length: 1 })
+          .map(() => arcaneSignetObject)
+          .flat()
+      );
+    });
+    it("filters out foils", () => {
+      const arcaneSignetObject: RawCard = {
+        quantity: 1,
+        name: "Arcane Signet",
+        set: "sld",
+        collectorNumber: "1492★",
+      };
+      const parsedLine = parseLine("1 Arcane Signet (SLD) 1492★ *E*");
+      expect(parsedLine).toEqual(
+        Array.from({ length: 1 })
+          .map(() => arcaneSignetObject)
+          .flat()
+      );
+    });
   });
 });

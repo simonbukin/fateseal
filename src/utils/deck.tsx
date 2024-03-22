@@ -5,7 +5,8 @@ export function parseDeckList(deck: string[]): RawCard[] {
 }
 
 export function parseLine(input: string): RawCard[] {
-  const regex = /^(\d+)\s+([A-Za-z\s']+)(?:\s+\(([^)]+)\))?(?:\s+(\S+))?$/;
+  const regex =
+    /^(?<quantity>\d+)\s+(?<name>.*?)(?:\s+\((?<set>.*?)\))?(?:\s+(?<collectorNumber>\S+))?(?:\s+\*(?:\S+)\*)?$/;
   const match = input.match(regex);
 
   if (!match) {
