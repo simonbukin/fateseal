@@ -1,9 +1,5 @@
 import { Epilogue } from "next/font/google";
-import DeckEntry, { CardData } from "../components/DeckEntry";
-import cardDataRaw from "@/data/cards.json";
-
-/* @ts-ignore */
-const cardData: CardData = cardDataRaw;
+import DeckEntry from "../components/DeckEntry";
 
 import InfoHoverCard from "@/components/InfoHoverCard";
 import FatesealLogo from "@/components/FatesealLogo";
@@ -27,7 +23,7 @@ export default function Home() {
           </div>
           <FatesealLogo />
         </div>
-        <DeckEntry cardData={cardData} />
+        <DeckEntry />
       </div>
     </div>
   );

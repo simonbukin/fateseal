@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Textarea, TextInput } from "@mantine/core";
 import { deckToObjects } from "@/utils/ttExport";
 import MTGCard from "./MTGCard";
@@ -9,16 +9,27 @@ import { CardError, decklistToCards, parseDeckList } from "@/utils/deck";
 
 export type CardData = { [card: string]: FatesealCard };
 
-interface IDeckEntryProps {
-  cardData: CardData;
-}
-
-function DeckEntry({ cardData }: IDeckEntryProps) {
+function DeckEntry() {
   const [deckList, setDeckList] = useState("");
   const [deckName, setDeckName] = useState("");
   const [cards, setCards] = useState<BasicCard[]>();
   const [extras, setExtras] = useState<BasicCard[]>();
   const [errorCards, setErrorCards] = useState<CardError[]>();
+  const [cardData, setCardData] = useState<CardData>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/cards.json");
+        const data = await response.json();
+        setCardData(data);
+      } catch (error) {
+        console.error("Error fetching JSON data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   function handleParseClick() {
     if (!cardData) return;
