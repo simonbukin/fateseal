@@ -8,12 +8,14 @@ export function parseLine(line: string): RawCard[] {
   if (line.length === 0) {
     throw new Error("Line must not be empty");
   }
-  const [unparsedQuantity, ...nameArray] = line.split(" ");
+  let [unparsedQuantity, ...nameArray] = line.split(" ");
+  // ignore etchings and foiling for now
+  nameArray = nameArray.filter((part) => part !== "*F*" && part !== "*E*");
 
   const lastElem = nameArray.at(-1);
 
   let collectorNumber: string | undefined;
-  if (lastElem && !isNaN(+lastElem)) {
+  if (lastElem) {
     collectorNumber = lastElem;
   }
 
@@ -72,6 +74,8 @@ export function decklistToCards(
   for (const card of decklist) {
     const result = cardData[card.name];
 
+    console.log("result: ", result);
+
     if (!result) {
       errorCards.push({
         card,
@@ -121,6 +125,7 @@ function searchPrint(
 ): Print {
   let prints_ = [...prints];
   const defaultPrint = prints_[0];
+  console.log("default: ", defaultPrint);
   if (set) {
     prints_ = prints_.filter((print) => print.set === set);
   }
