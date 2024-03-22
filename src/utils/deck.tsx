@@ -4,50 +4,33 @@ export function parseDeckList(deck: string[]): RawCard[] {
   return deck.map((line) => parseLine(line)).flat();
 }
 
-export function parseLine(line: string): RawCard[] {
-  if (line.length === 0) {
-    throw new Error("Line must not be empty");
-  }
-  let [unparsedQuantity, ...nameArray] = line.split(" ");
-  // ignore etchings and foiling for now
-  nameArray = nameArray.filter((part) => part !== "*F*" && part !== "*E*");
+export function parseLine(input: string): RawCard[] {
+  const regex = /^(\d+)\s+([A-Za-z\s']+)(?:\s+\(([^)]+)\))?(?:\s+(\S+))?$/;
+  const match = input.match(regex);
 
-  const lastElem = nameArray.at(-1);
-
-  let collectorNumber: string | undefined;
-  if (lastElem) {
-    collectorNumber = lastElem;
+  if (!match) {
+    throw new Error("Invalid input format");
   }
 
-  let set: string | undefined;
-  if (collectorNumber) {
-    const setElement = nameArray.at(-2);
-    set = setElement?.substring(1, setElement.length - 1).toLocaleLowerCase();
-  } else {
-    if (lastElem && lastElem.at(0) === "(" && lastElem.at(-1) === ")") {
-      set = lastElem?.substring(1, lastElem.length - 1).toLocaleLowerCase();
-    }
-  }
-  let sliceOff = nameArray.length;
-  if (set) {
-    sliceOff = -1;
-  }
-  if (collectorNumber) {
-    sliceOff -= 1;
-  }
-  const nameArraySlice = nameArray.slice(0, sliceOff);
-  const name = nameArraySlice.join(" ");
-  const quantity = +unparsedQuantity;
+  const [, quantityStr, cardName, setName, collectorNumberRaw] = match;
+
+  const quantity = parseInt(quantityStr, 10);
+  const name = cardName.trim();
+  const set = setName ? setName.trim().toLocaleLowerCase() : undefined;
+  const collectorNumber = collectorNumberRaw
+    ? collectorNumberRaw.trim()
+    : undefined;
+
   if (quantity <= 0) {
-    throw new RangeError("Quantity must be positive");
+    throw new Error("Quantity must be positive");
   }
 
   return Array.from({ length: quantity }).map(() => {
     return {
       name,
+      quantity,
       set,
       collectorNumber,
-      quantity,
     };
   });
 }

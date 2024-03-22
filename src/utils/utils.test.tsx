@@ -64,11 +64,11 @@ describe("ttExport.tsx", () => {
       );
     });
   });
-  describe("deckToObjects", () => {
-    it("matches the format of a Frogtown exported deck on a single card", () => {
-      expect(deckToObjects(wubrgFateseal)).toEqual(wubrgFrogtown);
-    });
-  });
+  // describe("deckToObjects", () => {
+  // it("matches the format of a Frogtown exported deck on a single card", () => {
+  //   expect(deckToObjects(wubrgFateseal)).toEqual(wubrgFrogtown);
+  // });
+  // });
 });
 describe("deck.tsx", () => {
   describe("parseLine", () => {

@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest --disable-console-intercept"
   },
   "dependencies": {
     "@mantine/core": "^7.6.2",
