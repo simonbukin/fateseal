@@ -4,16 +4,16 @@ import { useEffect, useState } from "react";
 import { Button, Textarea, TextInput } from "@mantine/core";
 import { deckToObjects } from "@/utils/ttExport";
 import MTGCard from "./MTGCard";
-import { BasicCard, RawCard, ScryfallCard } from "@/types/cards";
-import { parseDeckList } from "@/utils/deck";
+import { BasicCard, RawCard, FatesealCard } from "@/types/cards";
+import { CardError, decklistToCards, parseDeckList } from "@/utils/deck";
 
 function DeckEntry() {
   const [deckList, setDeckList] = useState("");
   const [deckName, setDeckName] = useState("");
-  const [cardData, setCardData] = useState<{ [card: string]: ScryfallCard }>();
+  const [cardData, setCardData] = useState<{ [card: string]: FatesealCard }>();
   const [cards, setCards] = useState<BasicCard[]>();
-  const [cardImages, setCardImages] = useState<BasicCard[]>();
   const [extras, setExtras] = useState<BasicCard[]>();
+  const [errorCards, setErrorCards] = useState<CardError[]>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,81 +30,20 @@ function DeckEntry() {
   }, []);
 
   function handleParseClick() {
-    const errorCards: Set<string> = new Set();
-    const cardImages: BasicCard[] = [];
-    const resultingCards: BasicCard[] = [];
-    const extraCards: BasicCard[] = [];
     if (!cardData) return;
-    const parsedDeckList: RawCard[] = parseDeckList(
+
+    const parsedDecklist: RawCard[] = parseDeckList(
       deckList.split("\n").filter((line) => line.length !== 0)
     );
-    for (const card of parsedDeckList) {
-      try {
-        const result = cardData[card.name];
 
-        if (result) {
-          const prints = result.prints;
+    const { resultingCards, extraCards, errorCards } = decklistToCards(
+      parsedDecklist,
+      cardData
+    );
 
-          let setNarrow;
-          let collectorNarrow;
-          if (card.set) {
-            setNarrow = prints.filter((print) => print.set === card.set);
-            if (card.collectorNumber) {
-              collectorNarrow = setNarrow.filter(
-                (print) => print.collectorNumber === `${card.collectorNumber}`
-              );
-            }
-          }
-
-          // console.log(card.name);
-          // console.log(prints.length);
-          // console.log(setNarrow);
-          // console.log(collectorNarrow);
-
-          let print = prints[0];
-          if (card.set && setNarrow) {
-            print = setNarrow[0];
-            if (card.collectorNumber && collectorNarrow) {
-              print = collectorNarrow[0];
-            }
-          }
-
-          const resultingCard = {
-            name: result.name,
-            imageUrl: print.imageUrl,
-            associatedCards: print.associatedCards,
-            allParts: print.associatedCards,
-          };
-          cardImages.push({ imageUrl: print.imageUrl, name: result.name });
-          resultingCards.push(resultingCard);
-          const extraCardsParsed =
-            (print.associatedCards &&
-              print.associatedCards
-                .map((part) => {
-                  return cardData[part.name];
-                })
-                .filter((card) => card)) ||
-            [];
-          const extraCardPicked = extraCardsParsed.map((card) => {
-            return card.prints[0];
-          });
-          const extraCardsToBasics = extraCardPicked.map((card) => {
-            return {
-              name: result.name,
-              imageUrl: card.imageUrl,
-            };
-          });
-          extraCards.push(...extraCardsToBasics);
-        } else {
-          errorCards.add(card.name);
-        }
-      } catch (e) {
-        errorCards.add(card.name);
-      }
-    }
     setCards(resultingCards);
-    setCardImages(cardImages);
     setExtras(extraCards);
+    setErrorCards(errorCards);
   }
 
   function handleExportClick() {
@@ -143,6 +82,19 @@ function DeckEntry() {
         description="Paste your decklist below, in the MTGO format. You can include a set name and collector number as well."
         placeholder={`1 Imperial Recruiter\n2 Mountain (SLD) 1193`}
       />
+      {errorCards && (
+        <ul>
+          {errorCards.map((errorCard, i) => {
+            return (
+              <li key={errorCard.card.name + i}>
+                <p className="text-red-500">
+                  {errorCard.error} {errorCard.card.name}
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+      )}
       <Button
         className="my-4"
         onClick={handleParseClick}
@@ -166,9 +118,9 @@ function DeckEntry() {
       >
         Export
       </Button>
-      {cardImages && (
+      {cards && (
         <ul className="absolute grid grid-cols-2 gap-2">
-          {cardImages.map((card, i) => {
+          {cards.map((card, i) => {
             return (
               <li key={card.imageUrl + i}>
                 <MTGCard card={card} />

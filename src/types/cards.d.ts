@@ -1,4 +1,4 @@
-export type ScryfallCard = {
+export type FatesealCard = {
   name: string;
   prints: Print[];
 };
