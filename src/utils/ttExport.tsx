@@ -1,5 +1,4 @@
 import { BasicCard } from "@/types/cards";
-import { ScryfallCard } from "./deck";
 
 export type CustomDeck = {
   Name: string;
