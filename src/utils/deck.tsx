@@ -57,9 +57,6 @@ export function decklistToCards(
   const extraCards: BasicCard[] = [];
   for (const card of decklist) {
     const result = cardData[card.name];
-
-    console.log("result: ", result);
-
     if (!result) {
       errorCards.push({
         card,
@@ -109,7 +106,6 @@ function searchPrint(
 ): Print {
   let prints_ = [...prints];
   const defaultPrint = prints_[0];
-  console.log("default: ", defaultPrint);
   if (set) {
     prints_ = prints_.filter((print) => print.set === set);
   }
