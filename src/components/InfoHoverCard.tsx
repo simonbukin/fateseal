@@ -1,6 +1,6 @@
 "use client";
 
-import { HoverCard, Button, Text } from "@mantine/core";
+import { HoverCard, Text } from "@mantine/core";
 
 function InfoHoverCard() {
   return (

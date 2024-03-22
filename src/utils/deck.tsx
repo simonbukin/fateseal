@@ -1,24 +1,5 @@
 import { RawCard } from "@/types/cards";
 
-export type ScryfallCard = {
-  name: string;
-  cards: { [setAndCollector: string]: UrlAndAllParts };
-};
-
-export type UrlAndAllParts = {
-  imageUrl: string;
-  allParts: RelatedCard[];
-};
-
-export type RelatedCard = {
-  id: string;
-  object: "related_card";
-  component: "token" | "meld_part" | "meld_result" | "combo_piece";
-  name: string;
-  type_line: string;
-  uri: string;
-};
-
 export function parseDeckList(deck: string[]): RawCard[] {
   return deck.map((line) => parseLine(line)).flat();
 }
@@ -31,9 +12,9 @@ export function parseLine(line: string): RawCard[] {
 
   const lastElem = nameArray.at(-1);
 
-  let collectorNumber: number | undefined;
+  let collectorNumber: string | undefined;
   if (lastElem && !isNaN(+lastElem)) {
-    collectorNumber = +lastElem;
+    collectorNumber = lastElem;
   }
 
   let set: string | undefined;
@@ -59,7 +40,7 @@ export function parseLine(line: string): RawCard[] {
     throw new RangeError("Quantity must be positive");
   }
 
-  return Array.from({ length: quantity }).map((item, index) => {
+  return Array.from({ length: quantity }).map(() => {
     return {
       name,
       set,

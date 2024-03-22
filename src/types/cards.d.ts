@@ -21,7 +21,7 @@ export type AssociatedCard = {
 export type RawCard = {
   name: string;
   set?: string;
-  collectorNumber?: number;
+  collectorNumber?: string;
   quantity: number;
 };
 

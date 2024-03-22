@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Plains",
+    "imageUrl": "https://cards.scryfall.io/large/front/4/2/425bc1f3-4e6b-4be9-8d3e-2a268a1eae60.jpg?1666048048"
+  },
+  {
+    "name": "Island",
+    "imageUrl": "https://cards.scryfall.io/large/front/7/f/7f0a1a30-8bef-4297-b566-d5f6b4d277a1.jpg?1668710368"
+  },
+  {
+    "name": "Swamp",
+    "imageUrl": "https://cards.scryfall.io/large/front/a/d/ad4e701b-4a03-4c3d-9574-ca2f035a7a5c.jpg?1666048299"
+  },
+  {
+    "name": "Mountain",
+    "imageUrl": "https://cards.scryfall.io/large/front/4/b/4b3eb87a-8f77-4859-95fd-10988f03da7b.jpg?1666048386"
+  },
+  {
+    "name": "Forest",
+    "imageUrl": "https://cards.scryfall.io/large/front/2/f/2fafd821-5bb3-4083-bf3b-ecc4cf6c7468.jpg?1666048337"
+  }
+]

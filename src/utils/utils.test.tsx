@@ -1,8 +1,8 @@
-import { expect, test, it, describe } from "vitest";
-import wubrg from "./wubrgScryfall.json";
+import { expect, it, describe } from "vitest";
+import wubrgFateseal from "./wubrgFateseal.json";
 import wubrgFrogtown from "./wubrgFrogtown.json";
 
-import { RawCard, ScryfallCard, parseLine } from "./deck";
+import { parseLine } from "./deck";
 import {
   type CustomDeckObject,
   generateDeckIds,
@@ -12,12 +12,12 @@ import {
   cardToContainedObject,
   deckToObjects,
 } from "./ttExport";
+import { BasicCard, RawCard } from "@/types/cards";
 
-const adelineScryfall: ScryfallCard = {
+const adelineScryfall: BasicCard = {
   name: "Adeline, Resplendent Cathar",
   imageUrl:
     "https://cards.scryfall.io/large/front/d/d/dd95d377-a61e-4b62-a883-ed491c48da15.jpg?1682208250",
-  id: "dd95d377-a61e-4b62-a883-ed491c48da15",
 };
 
 describe("ttExport.tsx", () => {
@@ -47,7 +47,7 @@ describe("ttExport.tsx", () => {
     };
     it("works on a given card", () => {
       expect(cardToCustomDeckObject(adelineScryfall)).toEqual(
-        adelineCustomDeckObject,
+        adelineCustomDeckObject
       );
     });
   });
@@ -60,13 +60,13 @@ describe("ttExport.tsx", () => {
     };
     it("works on a given card", () => {
       expect(cardToContainedObject(adelineScryfall, 100)).toEqual(
-        adelineContainedObject,
+        adelineContainedObject
       );
     });
   });
   describe("deckToObjects", () => {
     it("matches the format of a Frogtown exported deck on a single card", () => {
-      expect(deckToObjects(wubrg)).toEqual(wubrgFrogtown);
+      expect(deckToObjects(wubrgFateseal)).toEqual(wubrgFrogtown);
     });
   });
 });
@@ -81,7 +81,7 @@ describe("deck.tsx", () => {
       expect(parsedLine).toEqual(
         Array.from({ length: 6 })
           .map(() => mountainObject)
-          .flat(),
+          .flat()
       );
     });
     it("a negative quantity errors", () => {
@@ -98,6 +98,33 @@ describe("deck.tsx", () => {
       expect(() => {
         parseLine("");
       }).toThrow();
+    });
+    it("a card line with a set name is parsed properly", () => {
+      const mountainObject: RawCard = {
+        quantity: 6,
+        name: "Mountain",
+        set: "tsp",
+      };
+      const parsedLine = parseLine("6 Mountain (TSP)");
+      expect(parsedLine).toEqual(
+        Array.from({ length: 6 })
+          .map(() => mountainObject)
+          .flat()
+      );
+    });
+    it("parses a name, quantity, set name, and collector number", () => {
+      const mountainObject: RawCard = {
+        quantity: 6,
+        name: "Mountain",
+        set: "tsp",
+        collectorNumber: "295",
+      };
+      const parsedLine = parseLine("6 Mountain (TSP) 295");
+      expect(parsedLine).toEqual(
+        Array.from({ length: 6 })
+          .map(() => mountainObject)
+          .flat()
+      );
     });
   });
 });

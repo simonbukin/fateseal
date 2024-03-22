@@ -140,8 +140,8 @@ function DeckEntry() {
         size="md"
         minRows={5}
         label="Your decklist"
-        description="Paste your decklist below, in the MTGO format."
-        placeholder={`1 Imperial Recruiter\n2 Mountain`}
+        description="Paste your decklist below, in the MTGO format. You can include a set name and collector number as well."
+        placeholder={`1 Imperial Recruiter\n2 Mountain (SLD) 1193`}
       />
       <Button
         className="my-4"
