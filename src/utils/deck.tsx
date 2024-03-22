@@ -53,6 +53,7 @@ export function parseLine(line: string): RawCard[] {
 export type CardError = {
   card: RawCard;
   error: string;
+  fix?: string;
 };
 
 export type DecklistToCardsResult = {
@@ -74,7 +75,7 @@ export function decklistToCards(
     if (!result) {
       errorCards.push({
         card,
-        error: "Card not found",
+        error: `Card not found: ${card.name}`,
       });
       continue;
     }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Rosario } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { ColorSchemeScript, MantineProvider, Container } from "@mantine/core";
 
 const rosario = Rosario({ subsets: ["latin"] });
 
@@ -23,7 +23,9 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.svg" />
       </head>
       <body className={`${rosario.className} bg-stone-100`}>
-        <MantineProvider theme={{}}>{children}</MantineProvider>
+        <MantineProvider theme={{}}>
+          <Container>{children}</Container>
+        </MantineProvider>
       </body>
     </html>
   );
