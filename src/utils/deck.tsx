@@ -4,34 +4,63 @@ export function parseDeckList(deck: string[]): RawCard[] {
   return deck.map((line) => parseLine(line)).flat();
 }
 
-export function parseLine(input: string): RawCard[] {
-  const regex =
-    /^(?<quantity>\d+)\s+(?<name>.*?)(?:\s+\((?<set>.*?)\))?(?:\s+(?<collectorNumber>\S+))?(?:\s+\*(?:\S+)\*)?$/;
-  const match = input.match(regex);
+function extractInfo(
+  string: string
+): { set: string; before: string; after: string } | null {
+  const match = string.match(/^(.*?)\s*\((\w+)\)\s*(.*)$/);
+  if (match) {
+    const set = match[2];
+    const before = match[1];
+    const after = match[3];
+    return { set, before, after };
+  } else {
+    return null;
+  }
+}
 
-  if (!match) {
-    throw new Error("Invalid input format");
+export function parseLine(input: string): RawCard[] {
+  if (!input || input.length === 0) {
+    throw new Error("Input cannot be blank");
+  }
+  const [quantityStr, ...rest] = input.split(" ");
+  const quantity = +quantityStr;
+  const info = extractInfo(rest.join(" "));
+  console.log("rest: ", rest);
+  console.log("info: ", info);
+
+  let name: string;
+  let collectorNumber: string;
+  let set: string;
+  if (info) {
+    const {
+      set: setNameStr,
+      before: nameStr,
+      after: collectorNumberStr,
+    } = info;
+    if (collectorNumberStr) {
+      collectorNumber = collectorNumberStr
+        .split(" ")
+        .filter((part) => part !== "*F*" && part !== "*E*")
+        .join("");
+    }
+    if (setNameStr) {
+      set = setNameStr;
+    }
+    name = nameStr;
+  } else {
+    name = rest.join(" ");
   }
 
-  const [, quantityStr, cardName, setName, collectorNumberRaw] = match;
-
-  const quantity = parseInt(quantityStr, 10);
-  const name = cardName.trim();
-  const set = setName ? setName.trim().toLocaleLowerCase() : undefined;
-  const collectorNumber = collectorNumberRaw
-    ? collectorNumberRaw.trim()
-    : undefined;
-
   if (quantity <= 0) {
-    throw new Error("Quantity must be positive");
+    throw new Error("Quantity cannot be negative");
   }
 
   return Array.from({ length: quantity }).map(() => {
     return {
       name,
       quantity,
-      set,
-      collectorNumber,
+      set: set?.trim().toLocaleLowerCase(),
+      collectorNumber: collectorNumber?.trim().toLocaleLowerCase(),
     };
   });
 }

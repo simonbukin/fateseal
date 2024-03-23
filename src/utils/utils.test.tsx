@@ -126,6 +126,32 @@ describe("deck.tsx", () => {
           .flat()
       );
     });
+    it("parses a multi-word name, quantity, set name, and collector number", () => {
+      const darkslickShoresObject: RawCard = {
+        quantity: 1,
+        name: "Darkslick Shores",
+        set: "one",
+        collectorNumber: "250",
+      };
+      const parsedLine = parseLine("1 Darkslick Shores (ONE) 250");
+      expect(parsedLine).toEqual(
+        Array.from({ length: 1 })
+          .map(() => darkslickShoresObject)
+          .flat()
+      );
+    });
+    it("parses a multi-word name on its own", () => {
+      const darkslickShoresObject: RawCard = {
+        quantity: 1,
+        name: "Darkslick Shores",
+      };
+      const parsedLine = parseLine("1 Darkslick Shores");
+      expect(parsedLine).toEqual(
+        Array.from({ length: 1 })
+          .map(() => darkslickShoresObject)
+          .flat()
+      );
+    });
     it("filters out etchings", () => {
       const arcaneSignetObject: RawCard = {
         quantity: 1,
