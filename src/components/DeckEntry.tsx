@@ -214,7 +214,11 @@ function DeckEntry() {
             return (
               <li
                 key={card.images.front + `${i}---` + i}
-                className={i === cards.length - 1 ? "mb-4" : ""}
+                className={
+                  extras && extras.length !== 0 && i === cards.length - 1
+                    ? "mb-4"
+                    : ""
+                }
               >
                 <MTGCard card={card} />
               </li>
@@ -223,7 +227,10 @@ function DeckEntry() {
           {extras &&
             extras.map((card, i) => {
               return (
-                <li key={card.images.front + `${i}---` + i}>
+                <li
+                  key={card.images.front + `${i}---` + i}
+                  className={i === extras.length - 1 ? "mb-4" : ""}
+                >
                   <MTGCard card={card} />
                 </li>
               );
