@@ -1,6 +1,11 @@
 import { expect, it, describe } from "vitest";
 import wubrgFateseal from "./wubrgFateseal.json";
 import wubrgFrogtown from "./wubrgFrogtown.json";
+import jaceFateseal from "./jaceTransformFateseal.json";
+import jaceFrogtown from "./jaceTransformFrogtown.json";
+import tokensFateseal from "./tokensFateseal.json";
+import tokensFrogtown from "./tokensFrogtown.json";
+import tokensFatesealExtras from "./tokensFatesealExtras.json";
 
 import { parseLine } from "./deck";
 import {
@@ -16,8 +21,19 @@ import { BasicCard, RawCard } from "@/types/cards";
 
 const adelineScryfall: BasicCard = {
   name: "Adeline, Resplendent Cathar",
-  imageUrl:
-    "https://cards.scryfall.io/large/front/d/d/dd95d377-a61e-4b62-a883-ed491c48da15.jpg?1682208250",
+  images: {
+    front:
+      "https://cards.scryfall.io/large/front/d/d/dd95d377-a61e-4b62-a883-ed491c48da15.jpg?1682208250",
+  },
+};
+
+const growingRitesScryfall: BasicCard = {
+  name: "Growing Rites of Itlimoc // Itlimoc, Cradle of the Sun",
+  images: {
+    front:
+      "https://cards.scryfall.io/large/front/0/0/004524bf-b249-4dac-9c10-44d57143feb9.jpg?1699044409",
+    back: "https://cards.scryfall.io/large/back/0/0/004524bf-b249-4dac-9c10-44d57143feb9.jpg?1699044409",
+  },
 };
 
 describe("ttExport.tsx", () => {
@@ -52,23 +68,42 @@ describe("ttExport.tsx", () => {
     });
   });
   describe("cardToContainedObject", () => {
-    const adelineContainedObject: ContainedObject = {
-      CardID: 100,
-      Name: "Card",
-      Nickname: "Adeline, Resplendent Cathar",
-      Transform: DEFAULT_TRANSFORM_OPTIONS,
-    };
-    it("works on a given card", () => {
+    it("works on a single-faced card", () => {
+      const adelineContainedObject: ContainedObject = {
+        CardID: 100,
+        Name: "Card",
+        Nickname: "Adeline, Resplendent Cathar",
+        Transform: DEFAULT_TRANSFORM_OPTIONS,
+      };
       expect(cardToContainedObject(adelineScryfall, 100)).toEqual(
         adelineContainedObject
       );
     });
+    it("works on a double-faced card", () => {
+      const growingRitesContainedObject: ContainedObject = {
+        CardID: 100,
+        Name: "Card",
+        Nickname: "Growing Rites of Itlimoc // Itlimoc, Cradle of the Sun",
+        Transform: DEFAULT_TRANSFORM_OPTIONS,
+      };
+      expect(cardToContainedObject(growingRitesScryfall, 100)).toEqual(
+        growingRitesContainedObject
+      );
+    });
   });
-  // describe("deckToObjects", () => {
-  // it("matches the format of a Frogtown exported deck on a single card", () => {
-  //   expect(deckToObjects(wubrgFateseal)).toEqual(wubrgFrogtown);
-  // });
-  // });
+  describe("deckToObjects", () => {
+    it("matches the Frogtown format exported deck on 5 lands", () => {
+      expect(wubrgFrogtown).toEqual(deckToObjects(wubrgFateseal));
+    });
+    it("matches the Frogtown format on transform cards", () => {
+      expect(jaceFrogtown).toEqual(deckToObjects(jaceFateseal));
+    });
+    // it("matches the Frogtown format on token cards", () => {
+    //   expect(tokensFrogtown).toEqual(
+    //     deckToObjects(tokensFateseal, tokensFatesealExtras)
+    //   );
+    // });
+  });
 });
 describe("deck.tsx", () => {
   describe("parseLine", () => {

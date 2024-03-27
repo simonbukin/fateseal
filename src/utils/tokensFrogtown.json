@@ -6,7 +6,7 @@
         {
           "CardID": 100,
           "Name": "Card",
-          "Nickname": "Plains",
+          "Nickname": "Ancient Copper Dragon",
           "Transform": {
             "posX": 0,
             "posY": 0,
@@ -22,55 +22,7 @@
         {
           "CardID": 200,
           "Name": "Card",
-          "Nickname": "Island",
-          "Transform": {
-            "posX": 0,
-            "posY": 0,
-            "posZ": 0,
-            "rotX": 0,
-            "rotY": 180,
-            "rotZ": 180,
-            "scaleX": 1,
-            "scaleY": 1,
-            "scaleZ": 1
-          }
-        },
-        {
-          "CardID": 300,
-          "Name": "Card",
-          "Nickname": "Swamp",
-          "Transform": {
-            "posX": 0,
-            "posY": 0,
-            "posZ": 0,
-            "rotX": 0,
-            "rotY": 180,
-            "rotZ": 180,
-            "scaleX": 1,
-            "scaleY": 1,
-            "scaleZ": 1
-          }
-        },
-        {
-          "CardID": 400,
-          "Name": "Card",
-          "Nickname": "Mountain",
-          "Transform": {
-            "posX": 0,
-            "posY": 0,
-            "posZ": 0,
-            "rotX": 0,
-            "rotY": 180,
-            "rotZ": 180,
-            "scaleX": 1,
-            "scaleY": 1,
-            "scaleZ": 1
-          }
-        },
-        {
-          "CardID": 500,
-          "Name": "Card",
-          "Nickname": "Forest",
+          "Nickname": "Caesar, Legion's Emperor",
           "Transform": {
             "posX": 0,
             "posY": 0,
@@ -86,42 +38,18 @@
       ],
       "DeckIDs": [
         100,
-        200,
-        300,
-        400,
-        500
+        200
       ],
       "CustomDeck": {
         "1": {
-          "FaceURL": "https://cards.scryfall.io/large/front/4/2/425bc1f3-4e6b-4be9-8d3e-2a268a1eae60.jpg?1666048048",
+          "FaceURL": "https://cards.scryfall.io/large/front/0/c/0c9ac08c-11ce-4e8a-8ea8-c18cfc745ac7.jpg?1674138301",
           "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
           "NumHeight": 1,
           "NumWidth": 1,
           "BackIsHidden": true
         },
         "2": {
-          "FaceURL": "https://cards.scryfall.io/large/front/7/f/7f0a1a30-8bef-4297-b566-d5f6b4d277a1.jpg?1668710368",
-          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
-          "NumHeight": 1,
-          "NumWidth": 1,
-          "BackIsHidden": true
-        },
-        "3": {
-          "FaceURL": "https://cards.scryfall.io/large/front/a/d/ad4e701b-4a03-4c3d-9574-ca2f035a7a5c.jpg?1666048299",
-          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
-          "NumHeight": 1,
-          "NumWidth": 1,
-          "BackIsHidden": true
-        },
-        "4": {
-          "FaceURL": "https://cards.scryfall.io/large/front/4/b/4b3eb87a-8f77-4859-95fd-10988f03da7b.jpg?1666048386",
-          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
-          "NumHeight": 1,
-          "NumWidth": 1,
-          "BackIsHidden": true
-        },
-        "5": {
-          "FaceURL": "https://cards.scryfall.io/large/front/2/f/2fafd821-5bb3-4083-bf3b-ecc4cf6c7468.jpg?1666048337",
+          "FaceURL": "https://cards.scryfall.io/large/front/2/4/246a7176-98bc-4f54-aa61-38747420f178.jpg?1710673450",
           "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
           "NumHeight": 1,
           "NumWidth": 1,
@@ -135,6 +63,74 @@
         "rotX": 0,
         "rotY": 180,
         "rotZ": 180,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
+    },
+    {
+      "Name": "DeckCustom",
+      "ContainedObjects": [
+        {
+          "CardID": 100,
+          "Name": "Card",
+          "Nickname": "Treasure",
+          "Transform": {
+            "posX": 0,
+            "posY": 0,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 180,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          }
+        },
+        {
+          "CardID": 200,
+          "Name": "Card",
+          "Nickname": "Soldier",
+          "Transform": {
+            "posX": 0,
+            "posY": 0,
+            "posZ": 0,
+            "rotX": 0,
+            "rotY": 180,
+            "rotZ": 180,
+            "scaleX": 1,
+            "scaleY": 1,
+            "scaleZ": 1
+          }
+        }
+      ],
+      "DeckIDs": [
+        100,
+        200
+      ],
+      "CustomDeck": {
+        "1": {
+          "FaceURL": "https://cards.scryfall.io/normal/front/f/e/feb25d75-3251-414a-bb30-944505d92587.jpg?1681428763",
+          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
+          "NumHeight": 1,
+          "NumWidth": 1,
+          "BackIsHidden": true
+        },
+        "2": {
+          "FaceURL": "https://cards.scryfall.io/normal/front/c/e/cedd9906-3b52-43a3-bae8-fb6df5843d8a.jpg?1675456790",
+          "BackURL": "https://i.imgur.com/Hg8CwwU.jpeg",
+          "NumHeight": 1,
+          "NumWidth": 1,
+          "BackIsHidden": true
+        }
+      },
+      "Transform": {
+        "posX": 2.2,
+        "posY": 1,
+        "posZ": 0,
+        "rotX": 0,
+        "rotY": 180,
+        "rotZ": 0,
         "scaleX": 1,
         "scaleY": 1,
         "scaleZ": 1

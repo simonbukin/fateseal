@@ -111,14 +111,17 @@ export function decklistToCards(
           })
           .filter((card) => card)
           .map((extraCard) => {
-            return searchPrint(extraCard.prints, "t" + print.set);
+            return {
+              print: searchPrint(extraCard.prints, "t" + print.set),
+              cardName: extraCard.name,
+            };
           })
           .map((card) => {
             return {
-              name: result.name,
+              name: card.cardName,
               images: {
-                front: card.images.front,
-                back: card.images.back,
+                front: card.print.images.front,
+                back: card.print.images.back,
               },
             };
           })) ||

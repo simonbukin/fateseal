@@ -67,7 +67,7 @@ function DeckEntry() {
 
   function handleExportClick() {
     if (cards) {
-      const deck = deckToObjects(cards);
+      const deck = deckToObjects(cards, extras);
       const blob = new Blob([JSON.stringify(deck, null, 2)], {
         type: "application/json",
       });
@@ -213,7 +213,7 @@ function DeckEntry() {
           {cards.map((card, i) => {
             return (
               <li
-                key={card.images.front || "" + i}
+                key={card.images.front + `${i}---` + i}
                 className={i === cards.length - 1 ? "mb-4" : ""}
               >
                 <MTGCard card={card} />
@@ -223,7 +223,7 @@ function DeckEntry() {
           {extras &&
             extras.map((card, i) => {
               return (
-                <li key={card.images.front || "" + i}>
+                <li key={card.images.front + `${i}---` + i}>
                   <MTGCard card={card} />
                 </li>
               );

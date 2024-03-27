@@ -1,5 +1,9 @@
 import { BasicCard } from "@/types/cards";
 
+export type FullDeckExport = {
+  ObjectStates: CustomDeck[];
+};
+
 export type CustomDeck = {
   Name: string;
   ContainedObjects: ContainedObject[];
@@ -51,11 +55,15 @@ export const DEFAULT_TRANSFORM_OPTIONS: TransformOptions = {
   scaleZ: 1,
 };
 
-export function deckToObjects(deck: BasicCard[]): CustomDeck {
+export function deckToObjects(
+  deck: BasicCard[],
+  extraCardsDeck?: BasicCard[]
+): FullDeckExport {
   const customDeckTransform: TransformOptions = {
     ...DEFAULT_TRANSFORM_OPTIONS,
     posY: 1,
   };
+
   const containedObjects: ContainedObject[] = deck.map((card, index) => {
     return cardToContainedObject(card, (index + 1) * 100);
   });
@@ -64,12 +72,73 @@ export function deckToObjects(deck: BasicCard[]): CustomDeck {
   for (let i = 0; i < deck.length; i++) {
     customDeck[`${i + 1}`] = cardToCustomDeckObject(deck[i]);
   }
-  return {
+  const normalCards: CustomDeck = {
     Name: "DeckCustom",
-    ContainedObjects: containedObjects,
-    DeckIDs: deckIds,
     CustomDeck: customDeck,
+    DeckIDs: deckIds,
     Transform: customDeckTransform,
+    ContainedObjects: containedObjects,
+  };
+
+  let containedExtraObjects: ContainedObject[] = [];
+  let extraDeckIds: number[] = [];
+  let extraCardsCustomDeck: CustomDeckObjectMap = {};
+  if (extraCardsDeck) {
+    containedExtraObjects = extraCardsDeck.map((card, index) => {
+      return cardToContainedObject(card, (index + 1) * 100);
+    });
+    extraDeckIds = generateDeckIds(extraCardsDeck.length);
+    for (let i = 0; i < deck.length; i++) {
+      extraCardsCustomDeck[`${i + 1}`] = cardToCustomDeckObject(
+        extraCardsDeck[i]
+      );
+    }
+  }
+  const extraCards: CustomDeck = {
+    Name: "DeckCustom",
+    CustomDeck: extraCardsCustomDeck,
+    DeckIDs: extraDeckIds,
+    Transform: { ...DEFAULT_TRANSFORM_OPTIONS, posX: 2.2, posY: 1, rotZ: 0 },
+    ContainedObjects: containedExtraObjects,
+  };
+
+  const transformDeck = deck.filter((card) => card.images.back);
+  let transformContainedObjects: ContainedObject[] = [];
+  let transformDeckIds: number[] = [];
+  let transformCustomDeck: CustomDeckObjectMap = {};
+  if (transformDeck.length > 0) {
+    transformContainedObjects = transformDeck.map((card, index) => {
+      return cardToContainedObject(card, (index + 1) * 100);
+    });
+    transformDeckIds = generateDeckIds(transformDeck.length);
+    transformCustomDeck = {};
+    for (let i = 0; i < transformDeck.length; i++) {
+      transformCustomDeck[`${i + 1}`] = cardToCustomDeckObject(
+        transformDeck[i],
+        {
+          useBackFace: true,
+        }
+      );
+    }
+  }
+  const transformCards: CustomDeck = {
+    Name: "DeckCustom",
+    CustomDeck: transformCustomDeck,
+    DeckIDs: transformDeckIds,
+    Transform: { ...DEFAULT_TRANSFORM_OPTIONS, posX: 2.2, posY: 1, rotZ: 0 },
+    ContainedObjects: transformContainedObjects,
+  };
+
+  const objectStates = [normalCards];
+  if (transformDeck.length > 0) {
+    objectStates.push(transformCards);
+  }
+  if (extraCardsDeck && extraCardsDeck.length > 0) {
+    objectStates.push(extraCards);
+  }
+
+  return {
+    ObjectStates: objectStates,
   };
 }
 
@@ -82,10 +151,23 @@ export function generateDeckIds(totalIds: number): number[] {
   );
 }
 
-export function cardToCustomDeckObject(card: BasicCard): CustomDeckObject {
+export function cardToCustomDeckObject(
+  card: BasicCard,
+  config?: {
+    useBackFace: boolean;
+  }
+): CustomDeckObject {
+  const hasBackFace = Boolean(card.images.back);
+  const backFace = card.images.back;
+
   return {
-    FaceURL: card.imageUrl,
-    BackURL: "https://i.imgur.com/Hg8CwwU.jpeg",
+    FaceURL: card.images.front || "",
+    BackURL:
+      (config?.useBackFace
+        ? hasBackFace
+          ? backFace
+          : "https://i.imgur.com/Hg8CwwU.jpeg"
+        : "https://i.imgur.com/Hg8CwwU.jpeg") || "",
     NumHeight: 1,
     NumWidth: 1,
     BackIsHidden: true,
