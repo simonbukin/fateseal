@@ -9,8 +9,13 @@ interface IMTGCardProps {
 
 function MTGCard({ card }: IMTGCardProps) {
   const [loaded, setLoaded] = useState(false);
+  const [flipped, setFlipped] = useState(false);
+
+  const canFlip = Boolean(card.images.back);
+
   return (
     <motion.div
+      key={Number(flipped)}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
@@ -18,11 +23,21 @@ function MTGCard({ card }: IMTGCardProps) {
     >
       <Image
         onLoad={() => setLoaded(true)}
-        className="rounded-lg"
+        onMouseOver={() => {
+          if (canFlip) {
+            setFlipped(true);
+          }
+        }}
+        onMouseOut={() => {
+          if (canFlip) {
+            setFlipped(false);
+          }
+        }}
+        className="rounded-lg transition-all"
         style={{
           border: !loaded ? "1px solid gainsboro" : "",
         }}
-        src={card.imageUrl}
+        src={(flipped ? card.images.back : card.images.front) || ""}
         alt={`The Magic card ${card.name}`}
         width={667}
         height={930}

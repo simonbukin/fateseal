@@ -1,12 +1,20 @@
 import { Print, AssociatedCard } from "../src/types/cards";
 import { ScryfallCard } from "@scryfall/api-types";
+import { ScryfallLayout } from "@scryfall/api-types/src/objects/Card/values/Layout";
 
 function processCard(rawCard: ScryfallCard.Any): Print {
   const { id, set, collector_number, all_parts } = rawCard;
-  let largeImage: string | undefined = "";
-  if ("image_uris" in rawCard) {
-    largeImage = rawCard.image_uris && rawCard.image_uris.large;
+  let images: { front?: string; back?: string } = {};
+  if ("image_uris" in rawCard && rawCard.image_uris) {
+    images.front = rawCard.image_uris.large;
+  } else if (
+    rawCard.layout === ScryfallLayout.ModalDfc ||
+    rawCard.layout === ScryfallLayout.Transform
+  ) {
+    images.front = rawCard.card_faces[0]?.image_uris?.large;
+    images.back = rawCard.card_faces[1]?.image_uris?.large;
   }
+
   let associatedCards: AssociatedCard[] = [];
   if (all_parts) {
     const associatedCardsFiltered = all_parts.filter(
@@ -27,7 +35,7 @@ function processCard(rawCard: ScryfallCard.Any): Print {
     id,
     set,
     collectorNumber: collector_number,
-    imageUrl: largeImage || "",
+    images,
     associatedCards,
   };
   return print;
@@ -39,9 +47,6 @@ const cards: ScryfallCard.Any[] = await file.json();
 
 const englishCards = cards
   .filter((card) => card.lang === "en")
-  .filter((card) => {
-    return "image_uris" in card && card.image_uris && card.image_uris.large;
-  })
   .filter(
     (card) => card.legalities.commander === "legal" || card.layout === "token"
   );

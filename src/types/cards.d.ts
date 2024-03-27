@@ -7,7 +7,10 @@ export type Print = {
   id: string;
   set: string;
   collectorNumber: string;
-  imageUrl: string;
+  images: {
+    front?: string;
+    back?: string;
+  };
   associatedCards?: AssociatedCard[];
 };
 
@@ -27,5 +30,8 @@ export type RawCard = {
 
 export type BasicCard = {
   name: string;
-  imageUrl: string;
+  images: {
+    front?: string;
+    back?: string;
+  };
 };

@@ -213,7 +213,7 @@ function DeckEntry() {
           {cards.map((card, i) => {
             return (
               <li
-                key={card.imageUrl + i}
+                key={card.images.front || "" + i}
                 className={i === cards.length - 1 ? "mb-4" : ""}
               >
                 <MTGCard card={card} />
@@ -223,7 +223,7 @@ function DeckEntry() {
           {extras &&
             extras.map((card, i) => {
               return (
-                <li key={card.imageUrl + i}>
+                <li key={card.images.front || "" + i}>
                   <MTGCard card={card} />
                 </li>
               );

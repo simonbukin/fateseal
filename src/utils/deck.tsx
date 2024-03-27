@@ -25,8 +25,6 @@ export function parseLine(input: string): RawCard[] {
   const [quantityStr, ...rest] = input.split(" ");
   const quantity = +quantityStr;
   const info = extractInfo(rest.join(" "));
-  console.log("rest: ", rest);
-  console.log("info: ", info);
 
   let name: string;
   let collectorNumber: string;
@@ -98,7 +96,10 @@ export function decklistToCards(
 
     const resultingCard: BasicCard = {
       name: result.name,
-      imageUrl: print.imageUrl,
+      images: {
+        front: print.images.front,
+        back: print.images.back,
+      },
     };
     resultingCards.push(resultingCard);
 
@@ -115,7 +116,10 @@ export function decklistToCards(
           .map((card) => {
             return {
               name: result.name,
-              imageUrl: card.imageUrl,
+              images: {
+                front: card.images.front,
+                back: card.images.back,
+              },
             };
           })) ||
       [];
