@@ -215,7 +215,7 @@ function DeckEntry() {
               <li
                 key={card.images.front + `${i}---` + i}
                 className={
-                  extras && extras.length !== 0 && i === cards.length - 1
+                  extras && extras.length === 0 && i === cards.length - 1
                     ? "mb-4"
                     : ""
                 }

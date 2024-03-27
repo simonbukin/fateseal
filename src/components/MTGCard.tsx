@@ -16,9 +16,13 @@ function MTGCard({ card }: IMTGCardProps) {
   return (
     <motion.div
       key={Number(flipped)}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.25 }}
+      initial={{
+        y: Math.floor(Math.random() * 50) * (Math.random() > 0.5 ? -1 : 1),
+        x: Math.floor(Math.random() * 50) * (Math.random() > 0.5 ? -1 : 1),
+        opacity: 0,
+      }}
+      animate={{ y: 0, x: 0, opacity: 1 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
       className="relative flex flex-col items-center justify-center"
     >
       <Image
