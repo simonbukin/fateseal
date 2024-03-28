@@ -7,6 +7,8 @@ export type Print = {
   id: string;
   set: string;
   collectorNumber: string;
+  foil: boolean;
+  etched: boolean;
   images: {
     front?: string;
     back?: string;
@@ -25,6 +27,8 @@ export type RawCard = {
   name: string;
   set?: string;
   collectorNumber?: string;
+  foil?: boolean;
+  etched?: boolean;
   quantity: number;
 };
 

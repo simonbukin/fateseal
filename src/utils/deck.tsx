@@ -29,6 +29,8 @@ export function parseLine(input: string): RawCard[] {
   let name: string;
   let collectorNumber: string;
   let set: string;
+  let foil: boolean = false;
+  let etched: boolean = false;
   if (info) {
     const {
       set: setNameStr,
@@ -36,6 +38,12 @@ export function parseLine(input: string): RawCard[] {
       after: collectorNumberStr,
     } = info;
     if (collectorNumberStr) {
+      if (collectorNumberStr.includes("*F*")) {
+        foil = true;
+      }
+      if (collectorNumberStr.includes("*E*")) {
+        etched = true;
+      }
       collectorNumber = collectorNumberStr
         .split(" ")
         .filter((part) => part !== "*F*" && part !== "*E*")
@@ -59,6 +67,8 @@ export function parseLine(input: string): RawCard[] {
       quantity,
       set: set?.trim().toLocaleLowerCase(),
       collectorNumber: collectorNumber?.trim().toLocaleLowerCase(),
+      foil: foil ? foil : undefined,
+      etched: etched ? etched : undefined,
     };
   });
 }
@@ -138,7 +148,9 @@ export function decklistToCards(
 function searchPrint(
   prints: Print[],
   set?: string,
-  collectorNumber?: string
+  collectorNumber?: string,
+  foil?: boolean,
+  etched?: boolean
 ): Print {
   let prints_ = [...prints];
   const defaultPrint = prints_[0];
@@ -149,6 +161,12 @@ function searchPrint(
     prints_ = prints_.filter(
       (print) => print.collectorNumber === collectorNumber
     );
+  }
+  if (foil) {
+    prints_ = prints_.filter((print) => print.foil);
+  }
+  if (etched) {
+    prints_ = prints_.filter((print) => print.etched);
   }
   return prints_[0] ? prints_[0] : defaultPrint;
 }

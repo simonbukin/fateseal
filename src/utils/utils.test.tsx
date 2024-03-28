@@ -187,12 +187,13 @@ describe("deck.tsx", () => {
           .flat()
       );
     });
-    it("filters out etchings", () => {
+    it("parses foilings", () => {
       const arcaneSignetObject: RawCard = {
         quantity: 1,
         name: "Arcane Signet",
         set: "sld",
         collectorNumber: "1492★",
+        foil: true,
       };
       const parsedLine = parseLine("1 Arcane Signet (SLD) 1492★ *F*");
       expect(parsedLine).toEqual(
@@ -201,12 +202,13 @@ describe("deck.tsx", () => {
           .flat()
       );
     });
-    it("filters out foils", () => {
+    it("parses etchings", () => {
       const arcaneSignetObject: RawCard = {
         quantity: 1,
         name: "Arcane Signet",
         set: "sld",
         collectorNumber: "1492★",
+        etched: true,
       };
       const parsedLine = parseLine("1 Arcane Signet (SLD) 1492★ *E*");
       expect(parsedLine).toEqual(

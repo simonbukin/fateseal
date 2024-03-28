@@ -15,6 +15,11 @@ function processCard(rawCard: ScryfallCard.Any): Print {
     images.back = rawCard.card_faces[1]?.image_uris?.large;
   }
 
+  const foil = Boolean(rawCard.finishes.find((finish) => finish === "foil"));
+  const etched = Boolean(
+    rawCard.finishes.find((finish) => finish === "etched")
+  );
+
   let associatedCards: AssociatedCard[] = [];
   if (all_parts) {
     const associatedCardsFiltered = all_parts.filter(
@@ -36,6 +41,8 @@ function processCard(rawCard: ScryfallCard.Any): Print {
     set,
     collectorNumber: collector_number,
     images,
+    foil,
+    etched,
     associatedCards,
   };
   return print;
