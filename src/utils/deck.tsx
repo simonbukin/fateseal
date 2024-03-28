@@ -113,29 +113,18 @@ export function decklistToCards(
     };
     resultingCards.push(resultingCard);
 
-    const basicExtraCards: BasicCard[] =
-      (print.associatedCards &&
-        print.associatedCards
-          .map((part) => {
-            return cardData[part.name];
-          })
-          .filter((card) => card)
-          .map((extraCard) => {
-            return {
-              print: searchPrint(extraCard.prints, "t" + print.set),
-              cardName: extraCard.name,
-            };
-          })
-          .map((card) => {
-            return {
-              name: card.cardName,
-              images: {
-                front: card.print.images.front,
-                back: card.print.images.back,
-              },
-            };
-          })) ||
-      [];
+    const basicExtraCards: BasicCard[] = [];
+    if (print.associatedCards) {
+      print.associatedCards.forEach((associatedCard) => {
+        basicExtraCards.push({
+          name: associatedCard.name,
+          images: associatedCard.images || {
+            front: "https://i.imgur.com/Hg8CwwU.jpeg",
+            back: "",
+          },
+        });
+      });
+    }
     extraCards.push(...basicExtraCards);
   }
   return {

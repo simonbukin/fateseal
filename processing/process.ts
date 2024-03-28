@@ -1,4 +1,4 @@
-import { Print, AssociatedCard } from "../src/types/cards";
+import { Print, AssociatedCard, FatesealCard } from "../src/types/cards";
 import { ScryfallCard } from "@scryfall/api-types";
 import { ScryfallLayout } from "@scryfall/api-types/src/objects/Card/values/Layout";
 
@@ -9,7 +9,8 @@ function processCard(rawCard: ScryfallCard.Any): Print {
     images.front = rawCard.image_uris.large;
   } else if (
     rawCard.layout === ScryfallLayout.ModalDfc ||
-    rawCard.layout === ScryfallLayout.Transform
+    rawCard.layout === ScryfallLayout.Transform ||
+    rawCard.layout === ScryfallLayout.DoubleFacedToken
   ) {
     images.front = rawCard.card_faces[0]?.image_uris?.large;
     images.back = rawCard.card_faces[1]?.image_uris?.large;
@@ -55,10 +56,13 @@ const cards: ScryfallCard.Any[] = await file.json();
 const englishCards = cards
   .filter((card) => card.lang === "en")
   .filter(
-    (card) => card.legalities.commander === "legal" || card.layout === "token"
+    (card) =>
+      card.legalities.commander === "legal" ||
+      card.layout === "token" ||
+      card.layout === "double_faced_token"
   );
 
-const db = {};
+const db: { [key: string]: FatesealCard } = {};
 
 englishCards.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -75,6 +79,25 @@ for (let i = 0; i < englishCards.length; i++) {
 
   const print = processCard(card);
   db[name].prints.push(print);
+}
+
+for (const [_, card] of Object.entries(db)) {
+  for (const print of card.prints) {
+    if (print.associatedCards) {
+      for (let i = 0; i < print.associatedCards.length; i++) {
+        const associatedCard = print.associatedCards[i];
+        const card = db[associatedCard.name];
+        if (card) {
+          const printById = card.prints.find(
+            (print) => print.id === associatedCard.id
+          );
+          if (printById) {
+            associatedCard.images = printById.images;
+          }
+        }
+      }
+    }
+  }
 }
 
 await Bun.write(

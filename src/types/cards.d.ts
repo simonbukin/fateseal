@@ -21,6 +21,10 @@ export type AssociatedCard = {
   name: string;
   component: string;
   uri: string;
+  images?: {
+    front?: string;
+    back?: string;
+  };
 };
 
 export type RawCard = {
