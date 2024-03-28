@@ -15,7 +15,7 @@ function MTGCard({ card }: IMTGCardProps) {
 
   return (
     <motion.div
-      key={Number(flipped)}
+      key={Number(loaded)}
       initial={{
         y: Math.floor(Math.random() * 50) * (Math.random() > 0.5 ? -1 : 1),
         x: Math.floor(Math.random() * 50) * (Math.random() > 0.5 ? -1 : 1),
