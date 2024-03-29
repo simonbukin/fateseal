@@ -141,6 +141,7 @@ function DeckEntry() {
         placeholder="Deck name"
         value={deckName}
         size="md"
+        disabled={!Boolean(cardData)}
         className="mb-4 text-slate-800"
         label="Your deck's name"
         onChange={(e) => setDeckName(e.target.value)}
@@ -150,6 +151,7 @@ function DeckEntry() {
         onChange={(e) => setDeckList(e.target.value)}
         className="text-slate-800"
         size="md"
+        disabled={!Boolean(cardData)}
         minRows={5}
         label="Your decklist"
         description="Paste your decklist below, in the MTGO format. You can include a set name and collector number as well."
