@@ -142,14 +142,13 @@ function DeckEntry() {
         value={deckName}
         size="md"
         disabled={!Boolean(cardData)}
-        className="mb-4 text-slate-800"
+        className="mb-4"
         label="Your deck's name"
         onChange={(e) => setDeckName(e.target.value)}
       />
       <Textarea
         value={deckList}
         onChange={(e) => setDeckList(e.target.value)}
-        className="text-slate-800"
         size="md"
         disabled={!Boolean(cardData)}
         minRows={5}
@@ -192,7 +191,7 @@ function DeckEntry() {
       </Button>
       <Button
         disabled={!cards || cards.length < 1}
-        className="my-4 mb-8 outline outline-1 outline-slate-300"
+        className="my-4 mb-8"
         onClick={handleExportClick}
         fullWidth
         variant="gradient"

@@ -54,6 +54,7 @@ function FatesealLogo() {
         alt={`A MTG ${currentMana} icon`}
         width={32}
         height={32}
+        priority
         className="pointer-events-none absolute left-8 top-8 hover:rotate-[50deg]"
       />
     </div>

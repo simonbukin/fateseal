@@ -2,9 +2,20 @@ import type { Metadata } from "next";
 import { Rosario } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
-import { ColorSchemeScript, MantineProvider, Container } from "@mantine/core";
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  Container,
+  createTheme,
+} from "@mantine/core";
 
 const rosario = Rosario({ subsets: ["latin"] });
+
+const theme = createTheme({
+  black: "#1e293b",
+  white: "#f5f5f4",
+  fontFamily: rosario.style.fontFamily,
+});
 
 export const metadata: Metadata = {
   title: "Fateseal",
@@ -22,8 +33,12 @@ export default function RootLayout({
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
       </head>
-      <body className={`${rosario.className} bg-stone-100`}>
-        <MantineProvider theme={{}}>
+      <body>
+        <MantineProvider
+          theme={theme}
+          defaultColorScheme="dark"
+          forceColorScheme="dark"
+        >
           <Container>{children}</Container>
         </MantineProvider>
       </body>
