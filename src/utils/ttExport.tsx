@@ -88,7 +88,7 @@ export function deckToObjects(
       return cardToContainedObject(card, (index + 1) * 100);
     });
     extraDeckIds = generateDeckIds(extraCardsDeck.length);
-    for (let i = 0; i < deck.length; i++) {
+    for (let i = 0; i < extraCardsDeck.length; i++) {
       extraCardsCustomDeck[`${i + 1}`] = cardToCustomDeckObject(
         extraCardsDeck[i]
       );
