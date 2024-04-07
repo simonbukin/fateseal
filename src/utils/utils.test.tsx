@@ -217,5 +217,20 @@ describe("deck.tsx", () => {
           .flat()
       );
     });
+    it("parses a special collector number properly", () => {
+      const arcaneSignetObject: RawCard = {
+        quantity: 1,
+        name: "Arcane Signet",
+        set: "p30m",
+        collectorNumber: "1f★",
+        etched: true,
+      };
+      const parsedLine = parseLine("1 Arcane Signet (P30M) 1F★ *E*");
+      expect(parsedLine).toEqual(
+        Array.from({ length: 1 })
+          .map(() => arcaneSignetObject)
+          .flat()
+      );
+    });
   });
 });

@@ -13,6 +13,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "cards.scryfall.io",
       },
+      {
+        protocol: "https",
+        hostname: "i.imgur.com",
+      },
     ],
   },
 };

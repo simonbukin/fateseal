@@ -59,7 +59,8 @@ const englishCards = cards
     (card) =>
       card.legalities.commander === "legal" ||
       card.layout === "token" ||
-      card.layout === "double_faced_token"
+      card.layout === "double_faced_token" ||
+      new Date(card.released_at) > new Date()
   );
 
 const db: { [key: string]: FatesealCard } = {};

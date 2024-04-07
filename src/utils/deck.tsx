@@ -144,11 +144,11 @@ function searchPrint(
   let prints_ = [...prints];
   const defaultPrint = prints_[0];
   if (set) {
-    prints_ = prints_.filter((print) => print.set === set);
+    prints_ = prints_.filter((print) => print.set.toLocaleLowerCase() === set);
   }
   if (collectorNumber) {
     prints_ = prints_.filter(
-      (print) => print.collectorNumber === collectorNumber
+      (print) => print.collectorNumber.toLocaleLowerCase() === collectorNumber
     );
   }
   if (foil) {
