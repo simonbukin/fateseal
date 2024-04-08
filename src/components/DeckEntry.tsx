@@ -13,9 +13,9 @@ export type CardData = { [card: string]: FatesealCard };
 function DeckEntry() {
   const [deckList, setDeckList] = useState("");
   const [deckName, setDeckName] = useState("");
-  const [cards, setCards] = useState<BasicCard[]>();
-  const [extras, setExtras] = useState<BasicCard[]>();
-  const [errorCards, setErrorCards] = useState<CardError[]>();
+  const [cards, setCards] = useState<BasicCard[]>([]);
+  const [extras, setExtras] = useState<BasicCard[]>([]);
+  const [errorCards, setErrorCards] = useState<CardError[]>([]);
   const [cardData, setCardData] = useState<CardData>();
   const [fuse, setFuse] = useState<Fuse<string>>();
 
@@ -141,7 +141,6 @@ function DeckEntry() {
         placeholder="Deck name"
         value={deckName}
         size="md"
-        disabled={!Boolean(cardData)}
         className="mb-4"
         label="Your deck's name"
         onChange={(e) => setDeckName(e.target.value)}
@@ -152,7 +151,11 @@ function DeckEntry() {
         size="md"
         disabled={!Boolean(cardData)}
         minRows={5}
-        label="Your decklist"
+        label={`Your decklist • ${
+          cards.length > 0
+            ? `(${cards.length} cards, ${extras.length} tokens, ${errorCards.length} errors)`
+            : ""
+        }`}
         description="Paste your decklist below, in the MTGO format. You can include a set name and collector number as well."
         placeholder={`1 Imperial Recruiter\n2 Mountain (SLD) 1193`}
       />

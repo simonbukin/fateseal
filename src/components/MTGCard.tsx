@@ -1,5 +1,5 @@
 import { BasicCard } from "@/types/cards";
-import Image from "next/image";
+import { Image } from "@unpic/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -20,10 +20,25 @@ function MTGCard({ card }: IMTGCardProps) {
         y: Math.floor(Math.random() * 50) * (Math.random() > 0.5 ? -1 : 1),
         x: Math.floor(Math.random() * 50) * (Math.random() > 0.5 ? -1 : 1),
         opacity: 0,
+        rotateX: 90,
+        rotateY: 90,
+        rotateZ: 90,
       }}
-      animate={{ y: 0, x: 0, opacity: 1 }}
-      transition={{ duration: 0.25, ease: "easeInOut" }}
+      whileInView={{ opacity: 1, filter: "grayscale(0)" }}
+      animate={{
+        y: 0,
+        x: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: 0,
+        opacity: 0.8,
+        filter: "grayscale(1)",
+      }}
+      transition={{ duration: 0.75, ease: "anticipate" }}
       className="relative flex flex-col items-center justify-center"
+      style={{
+        border: !loaded ? "1px solid gainsboro" : "",
+      }}
     >
       <Image
         onLoad={() => setLoaded(true)}
@@ -38,9 +53,6 @@ function MTGCard({ card }: IMTGCardProps) {
           }
         }}
         className="rounded-lg transition-all"
-        style={{
-          border: !loaded ? "1px solid gainsboro" : "",
-        }}
         src={(flipped ? card.images.back : card.images.front) || ""}
         alt={`The Magic card ${card.name}`}
         width={667}

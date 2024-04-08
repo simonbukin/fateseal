@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { Image } from "@unpic/react";
 import { useState } from "react";
 
 enum MANA {
@@ -11,14 +11,6 @@ enum MANA {
   FOREST,
   WASTES,
 }
-
-const manaToColor = {
-  plains: "rgb(249, 250, 244)",
-  island: "rgb(14, 104, 171)",
-  swamp: "rgb(21, 11, 0)",
-  mountain: "rgb(211, 32, 42)",
-  forest: "rgb(0, 115, 62)",
-};
 
 const pickRandom = <T,>(collection: T[]): T => {
   return collection[Math.floor(Math.random() * collection.length)];
