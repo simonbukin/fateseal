@@ -8,6 +8,7 @@ const nextConfig = {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
   images: {
+    unoptimized: false,
     remotePatterns: [
       {
         protocol: "https",

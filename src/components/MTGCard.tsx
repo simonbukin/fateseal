@@ -24,7 +24,11 @@ function MTGCard({ card }: IMTGCardProps) {
         rotateY: 90,
         rotateZ: 90,
       }}
-      whileInView={{ opacity: 1, filter: "grayscale(0)" }}
+      whileInView={{ opacity: 1 }}
+      whileHover={{
+        scale: 1.1,
+        transition: { duration: 0.1 },
+      }}
       animate={{
         y: 0,
         x: 0,
@@ -32,7 +36,6 @@ function MTGCard({ card }: IMTGCardProps) {
         rotateY: 0,
         rotateZ: 0,
         opacity: 0.8,
-        filter: "grayscale(1)",
       }}
       transition={{ duration: 0.75, ease: "anticipate" }}
       className="relative flex flex-col items-center justify-center"

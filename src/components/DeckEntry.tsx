@@ -151,9 +151,9 @@ function DeckEntry() {
         size="md"
         disabled={!Boolean(cardData)}
         minRows={5}
-        label={`Your decklist • ${
+        label={`Your decklist ${
           cards.length > 0
-            ? `(${cards.length} cards, ${extras.length} tokens, ${errorCards.length} errors)`
+            ? `• (${cards.length} cards, ${extras.length} tokens, ${errorCards.length} errors)`
             : ""
         }`}
         description="Paste your decklist below, in the MTGO format. You can include a set name and collector number as well."
