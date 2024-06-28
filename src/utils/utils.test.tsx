@@ -3,9 +3,6 @@ import wubrgFateseal from "./wubrgFateseal.json";
 import wubrgFrogtown from "./wubrgFrogtown.json";
 import jaceFateseal from "./jaceTransformFateseal.json";
 import jaceFrogtown from "./jaceTransformFrogtown.json";
-import tokensFateseal from "./tokensFateseal.json";
-import tokensFrogtown from "./tokensFrogtown.json";
-import tokensFatesealExtras from "./tokensFatesealExtras.json";
 
 import { parseLine } from "./deck";
 import {
@@ -109,7 +106,7 @@ describe("deck.tsx", () => {
   describe("parseLine", () => {
     it("a card line is parsed properly", () => {
       const mountainObject: RawCard = {
-        quantity: 6,
+        quantity: 1,
         name: "Mountain",
       };
       const parsedLine = parseLine("6 Mountain");
@@ -136,7 +133,7 @@ describe("deck.tsx", () => {
     });
     it("a card line with a set name is parsed properly", () => {
       const mountainObject: RawCard = {
-        quantity: 6,
+        quantity: 1,
         name: "Mountain",
         set: "tsp",
       };
@@ -149,7 +146,7 @@ describe("deck.tsx", () => {
     });
     it("parses a name, quantity, set name, and collector number", () => {
       const mountainObject: RawCard = {
-        quantity: 6,
+        quantity: 1,
         name: "Mountain",
         set: "tsp",
         collectorNumber: "295",

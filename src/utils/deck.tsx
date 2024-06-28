@@ -64,7 +64,7 @@ export function parseLine(input: string): RawCard[] {
   return Array.from({ length: quantity }).map(() => {
     return {
       name,
-      quantity,
+      quantity: 1,
       set: set?.trim().toLocaleLowerCase(),
       collectorNumber: collectorNumber?.trim().toLocaleLowerCase(),
       foil: foil ? foil : undefined,
@@ -95,10 +95,17 @@ export function decklistToCards(
   for (const card of decklist) {
     const result = cardData[card.name];
     if (!result) {
-      errorCards.push({
-        card,
-        error: `Card not found: ${card.name}`,
-      });
+      const existingError = errorCards.find(
+        (error) => error.card.name === card.name
+      );
+      if (existingError) {
+        existingError.card.quantity += card.quantity;
+      } else {
+        errorCards.push({
+          card,
+          error: `Card not found: ${card.name}`,
+        });
+      }
       continue;
     }
 

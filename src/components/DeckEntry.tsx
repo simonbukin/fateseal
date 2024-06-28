@@ -89,50 +89,62 @@ function DeckEntry() {
     }
   }
 
-  async function fixError(errorCard: CardError, j: number): Promise<void> {
-    if (errorCard.fix) {
-      const decklist = parseDeckList(
-        deckList.split("\n").filter((line) => line.length !== 0)
-      );
-      let found = false;
-      let i = 0;
-      for (; i < decklist.length; i++) {
-        if (decklist[i].name === errorCard.card.name) {
-          found = true;
-          break;
-        }
+  async function fixError(errorCard: CardError, index: number): Promise<void> {
+    if (!errorCard.fix) return;
+
+    console.log("Fixing error for card:", errorCard);
+
+    const decklist = parseDeckList(
+      deckList.split("\n").filter((line) => line.length !== 0)
+    );
+
+    console.log("Parsed decklist:", decklist);
+
+    decklist.forEach((card) => {
+      if (
+        card.name.toLowerCase() === errorCard.card.name.toLowerCase() &&
+        errorCard.fix
+      ) {
+        console.log(`Fixing card: ${card.name} to ${errorCard.fix}`);
+        card.name = errorCard.fix;
+        card.quantity = errorCard.card.quantity;
+        errorCard.card.quantity = 0;
+        console.log("card: ", card);
+        console.log("errorCard: ", errorCard);
       }
-      if (found) {
-        decklist[i] = {
-          name: errorCard.fix,
-          quantity: decklist[i].quantity,
-          set: decklist[i].set,
-          collectorNumber: decklist[i].collectorNumber,
-        };
-        setDeckList(() => {
-          return decklist
-            .map((card) => {
-              return `${card.quantity} ${card.name}${
-                card.set ? ` (${card.set.toLocaleUpperCase()})` : ""
-              }${
-                card.collectorNumber
-                  ? card.collectorNumber.toLocaleUpperCase()
-                  : ""
-              }`;
-            })
-            .join("\n");
-        });
-        if (errorCards) {
-          const errorCardsCopy = [...errorCards];
-          errorCardsCopy.splice(j, 1);
-          setErrorCards(errorCardsCopy);
-        }
-      } else {
-        return;
-      }
-    } else {
-      return;
-    }
+    });
+
+    const filteredDecklist = decklist.filter((card) => card.quantity > 0);
+
+    console.log("Filtered decklist:", filteredDecklist);
+
+    const updatedDeckList = filteredDecklist
+      .map(
+        (card) =>
+          `${card.quantity} ${card.name}${
+            card.set ? ` (${card.set.toUpperCase()})` : ""
+          }${card.collectorNumber ? card.collectorNumber.toUpperCase() : ""}`
+      )
+      .join("\n");
+
+    console.log("Updated deck list string:", updatedDeckList);
+
+    setDeckList(updatedDeckList);
+
+    if (!cardData) return;
+
+    const { resultingCards, extraCards, errorCards } = decklistToCards(
+      filteredDecklist,
+      cardData
+    );
+
+    console.log("Resulting cards:", resultingCards);
+    console.log("Extra cards:", extraCards);
+    console.log("Error cards:", errorCards);
+
+    setCards(resultingCards);
+    setExtras(extraCards);
+    setErrorCards(errorCards.filter((_, i) => i !== index));
   }
 
   return (
