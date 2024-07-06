@@ -57,7 +57,8 @@ export const DEFAULT_TRANSFORM_OPTIONS: TransformOptions = {
 
 export function deckToObjects(
   deck: BasicCard[],
-  extraCardsDeck?: BasicCard[]
+  extraCardsDeck?: BasicCard[],
+  customBackUrl?: string
 ): FullDeckExport {
   const customDeckTransform: TransformOptions = {
     ...DEFAULT_TRANSFORM_OPTIONS,
@@ -70,7 +71,9 @@ export function deckToObjects(
   const deckIds = generateDeckIds(deck.length);
   const customDeck: CustomDeckObjectMap = {};
   for (let i = 0; i < deck.length; i++) {
-    customDeck[`${i + 1}`] = cardToCustomDeckObject(deck[i]);
+    customDeck[`${i + 1}`] = cardToCustomDeckObject(deck[i], {
+      customBackUrl,
+    });
   }
   const normalCards: CustomDeck = {
     Name: "DeckCustom",
@@ -154,20 +157,20 @@ export function generateDeckIds(totalIds: number): number[] {
 export function cardToCustomDeckObject(
   card: BasicCard,
   config?: {
-    useBackFace: boolean;
+    useBackFace?: boolean;
+    customBackUrl?: string;
   }
 ): CustomDeckObject {
-  const hasBackFace = Boolean(card.images.back);
-  const backFace = card.images.back;
+  const shouldUseBackFace =
+    (config?.useBackFace && Boolean(card.images.back)) || config?.customBackUrl;
+  const backFace =
+    config?.customBackUrl ||
+    card.images.back ||
+    "https://i.imgur.com/Hg8CwwU.jpeg";
 
   return {
     FaceURL: card.images.front || "",
-    BackURL:
-      (config?.useBackFace
-        ? hasBackFace
-          ? backFace
-          : "https://i.imgur.com/Hg8CwwU.jpeg"
-        : "https://i.imgur.com/Hg8CwwU.jpeg") || "",
+    BackURL: shouldUseBackFace ? backFace : "https://i.imgur.com/Hg8CwwU.jpeg",
     NumHeight: 1,
     NumWidth: 1,
     BackIsHidden: true,

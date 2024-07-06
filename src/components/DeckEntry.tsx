@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Textarea, TextInput } from "@mantine/core";
+import { Button, Image, Textarea, TextInput } from "@mantine/core";
 import { deckToObjects } from "@/utils/ttExport";
 import MTGCard from "./MTGCard";
 import { BasicCard, RawCard, FatesealCard } from "@/types/cards";
@@ -18,6 +18,7 @@ function DeckEntry() {
   const [errorCards, setErrorCards] = useState<CardError[]>([]);
   const [cardData, setCardData] = useState<CardData>();
   const [fuse, setFuse] = useState<Fuse<string>>();
+  const [customBackUrl, setCustomBackUrl] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,8 +67,8 @@ function DeckEntry() {
   }
 
   function handleExportClick() {
-    if (cards) {
-      const deck = deckToObjects(cards, extras);
+    if (cards.length > 0) {
+      const deck = deckToObjects(cards, extras, customBackUrl);
       const blob = new Blob([JSON.stringify(deck, null, 2)], {
         type: "application/json",
       });
@@ -83,40 +84,31 @@ function DeckEntry() {
 
   function displayCardError(card: CardError) {
     if (card.fix) {
-      return `Did you mean ${card.fix}?`;
+      return `No match found for "${card.card.name}". Did you mean "${card.fix}"?`;
     } else {
-      return `${card.error}`;
+      return `Could not find a match for "${card.card.name}". ${card.error}`;
     }
   }
 
   async function fixError(errorCard: CardError, index: number): Promise<void> {
     if (!errorCard.fix) return;
 
-    console.log("Fixing error for card:", errorCard);
-
     const decklist = parseDeckList(
       deckList.split("\n").filter((line) => line.length !== 0)
     );
-
-    console.log("Parsed decklist:", decklist);
 
     decklist.forEach((card) => {
       if (
         card.name.toLowerCase() === errorCard.card.name.toLowerCase() &&
         errorCard.fix
       ) {
-        console.log(`Fixing card: ${card.name} to ${errorCard.fix}`);
         card.name = errorCard.fix;
         card.quantity = errorCard.card.quantity;
         errorCard.card.quantity = 0;
-        console.log("card: ", card);
-        console.log("errorCard: ", errorCard);
       }
     });
 
     const filteredDecklist = decklist.filter((card) => card.quantity > 0);
-
-    console.log("Filtered decklist:", filteredDecklist);
 
     const updatedDeckList = filteredDecklist
       .map(
@@ -127,8 +119,6 @@ function DeckEntry() {
       )
       .join("\n");
 
-    console.log("Updated deck list string:", updatedDeckList);
-
     setDeckList(updatedDeckList);
 
     if (!cardData) return;
@@ -137,10 +127,6 @@ function DeckEntry() {
       filteredDecklist,
       cardData
     );
-
-    console.log("Resulting cards:", resultingCards);
-    console.log("Extra cards:", extraCards);
-    console.log("Error cards:", errorCards);
 
     setCards(resultingCards);
     setExtras(extraCards);
@@ -161,6 +147,7 @@ function DeckEntry() {
         value={deckList}
         onChange={(e) => setDeckList(e.target.value)}
         size="md"
+        autosize
         disabled={!Boolean(cardData)}
         minRows={5}
         label={`Your decklist ${
@@ -169,14 +156,28 @@ function DeckEntry() {
             : ""
         }`}
         description="Paste your decklist below, in the MTGO format. You can include a set name and collector number as well."
-        placeholder={`1 Imperial Recruiter\n2 Mountain (SLD) 1193`}
+        placeholder={`1 Imperial Recruiter\n2 Mountain (SLD) 1193\n• • • `}
       />
+      <TextInput
+        placeholder="https://example.com/path/to/your/image.jpg"
+        value={customBackUrl}
+        size="md"
+        className="mb-4"
+        label="Custom back image URL"
+        onChange={(e) => setCustomBackUrl(e.target.value)}
+      />
+      {customBackUrl && (
+        <img
+          src={customBackUrl}
+          className="max-w-full max-h-64 object-contain"
+        />
+      )}
       {errorCards && (
         <ul className="mt-3">
           {errorCards.map((errorCard, i) => {
             return (
               <li
-                className="flex flex-row justify-between items-center"
+                className="flex flex-row gap-2 justify-between items-center"
                 key={errorCard.card.name + i}
               >
                 <p className="text-red-500">{displayCardError(errorCard)}</p>
@@ -185,6 +186,7 @@ function DeckEntry() {
                   variant="gradient"
                   gradient={{ from: "yellow", to: "orange", deg: 90 }}
                   size="md"
+                  className="shrink-0"
                 >
                   Yep
                 </Button>

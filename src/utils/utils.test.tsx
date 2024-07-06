@@ -63,6 +63,20 @@ describe("ttExport.tsx", () => {
         adelineCustomDeckObject
       );
     });
+    it("uses custom back URL if provided", () => {
+      const customBackUrl = "https://example.com/custom-back.jpg";
+      const customDeckObject = cardToCustomDeckObject(adelineScryfall, {
+        customBackUrl,
+      });
+      expect(customDeckObject.BackURL).toBe(customBackUrl);
+    });
+
+    it("uses card's back image if useBackFace is true", () => {
+      const customDeckObject = cardToCustomDeckObject(growingRitesScryfall, {
+        useBackFace: true,
+      });
+      expect(customDeckObject.BackURL).toBe(growingRitesScryfall.images.back);
+    });
   });
   describe("cardToContainedObject", () => {
     it("works on a single-faced card", () => {
@@ -100,6 +114,25 @@ describe("ttExport.tsx", () => {
     //     deckToObjects(tokensFateseal, tokensFatesealExtras)
     //   );
     // });
+    it("includes extra cards if provided", () => {
+      const extraDeck: BasicCard[] = [adelineScryfall];
+      const result = deckToObjects([adelineScryfall], extraDeck);
+      expect(result.ObjectStates).toHaveLength(2);
+      expect(result.ObjectStates[1].ContainedObjects).toHaveLength(1);
+    });
+
+    it("handles transform cards correctly", () => {
+      const transformCard: BasicCard = {
+        ...adelineScryfall,
+        images: {
+          ...adelineScryfall.images,
+          back: "https://example.com/back.jpg",
+        },
+      };
+      const result = deckToObjects([transformCard]);
+      expect(result.ObjectStates).toHaveLength(2);
+      expect(result.ObjectStates[1].ContainedObjects).toHaveLength(1);
+    });
   });
 });
 describe("deck.tsx", () => {
