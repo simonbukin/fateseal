@@ -162,7 +162,7 @@ function DeckEntry() {
         placeholder="https://example.com/path/to/your/image.jpg"
         value={customBackUrl}
         size="md"
-        className="mb-4"
+        className="mt-4"
         label="Custom back image URL"
         onChange={(e) => setCustomBackUrl(e.target.value)}
       />
