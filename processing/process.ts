@@ -3,9 +3,6 @@ import { ScryfallCard } from "@scryfall/api-types";
 import { ScryfallLayout } from "@scryfall/api-types/src/objects/Card/values/Layout";
 
 function processCard(rawCard: ScryfallCard.Any): Print {
-  if (rawCard.name === "Wicked // Cursed") {
-    console.log("rawCard", rawCard);
-  }
   const { id, set, collector_number, all_parts } = rawCard;
   let images: { front?: string; back?: string } = {};
   if ("image_uris" in rawCard && rawCard.image_uris) {

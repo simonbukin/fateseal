@@ -4,7 +4,7 @@ This is a simple utility website that takes an MTG decklist and exports a Tablet
 
 ## Running locally
 
-This website will eventually be hosted, but for now it can be run locally. All that is necessary is cloning the repository and running the following commands:
+This website is hosted at [fateseal.com](https://fateseal.com), but you can also run it locally. All that is necessary is cloning the repository and running the following commands:
 
 ```shell
 
@@ -15,9 +15,17 @@ $ npm run dev
 
 Then you just need to navigate to `localhost:3000` and the app is available to use.
 
+## Current Pipeline
+
+1. Download bulk data dump from Scryfall ('All Cards', around 2GB)
+2. Move into the `processing` directory
+3. Run `bun process.ts`
+4. Move the `processed.json` file into the `public` directory
+5. Delete the `cards.json` file, and rename the `processed.json` file to `cards.json`
+
 ## Data processing with bun
 
-I previously used jq for quick data processing, but switched over to a script using Bun for better readability. It takes a little longer, but is much easier to maintain. Currently, the 2GB bulk data dump gets converted down into a 20MB JSON.
+I previously used `jq` for quick data processing, but switched over to a script using Bun for better readability. It takes a little longer, but is much easier to maintain. Currently, the 2GB bulk data dump gets converted down into a 20MB JSON.
 
 ## jq for data processing (old)
 
