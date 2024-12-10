@@ -19,6 +19,9 @@ function DeckEntry() {
   const [cardData, setCardData] = useState<CardData>();
   const [fuse, setFuse] = useState<Fuse<string>>();
   const [customBackUrl, setCustomBackUrl] = useState("");
+  const [customCommanderUrl, setCustomCommanderUrl] = useState("");
+  const [customBackError, setCustomBackError] = useState(false);
+  const [commanderError, setCommanderError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,6 +58,15 @@ function DeckEntry() {
       parsedDecklist,
       cardData
     );
+
+    if (customCommanderUrl) {
+      resultingCards.unshift({
+        name: "Custom Commander",
+        images: {
+          front: customCommanderUrl,
+        },
+      });
+    }
 
     errorCards.forEach((errorCard) => {
       const result = fuse?.search(errorCard.card.name)[0];
@@ -164,13 +176,52 @@ function DeckEntry() {
         size="md"
         className="mt-4"
         label="Custom back image URL"
-        onChange={(e) => setCustomBackUrl(e.target.value)}
+        description="Optional: Provide a URL to your custom back image"
+        onChange={(e) => {
+          setCustomBackUrl(e.target.value);
+          setCustomBackError(false);
+        }}
       />
       {customBackUrl && (
-        <img
-          src={customBackUrl}
-          className="max-w-full max-h-64 object-contain"
-        />
+        <>
+          <img
+            src={customBackUrl}
+            className="max-w-full max-h-64 object-contain"
+            onError={() => setCustomBackError(true)}
+          />
+          {customBackError && (
+            <p className="text-red-500 mt-1">
+              Failed to load image. Please check the URL.
+            </p>
+          )}
+        </>
+      )}
+      <TextInput
+        placeholder="https://example.com/path/to/your/commander.jpg"
+        value={customCommanderUrl}
+        size="md"
+        className="mt-4"
+        label="Custom Commander URL"
+        description="Optional: Provide a URL to your custom commander image"
+        onChange={(e) => {
+          setCustomCommanderUrl(e.target.value);
+          setCommanderError(false);
+        }}
+      />
+      {customCommanderUrl && (
+        <>
+          <img
+            src={customCommanderUrl}
+            alt="Custom commander preview"
+            className="mt-2 max-w-full max-h-64 object-contain rounded-lg"
+            onError={() => setCommanderError(true)}
+          />
+          {commanderError && (
+            <p className="text-red-500 mt-1">
+              Failed to load commander image. Please check the URL.
+            </p>
+          )}
+        </>
       )}
       {errorCards && (
         <ul className="mt-3">
