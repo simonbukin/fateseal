@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Rosario } from "next/font/google";
+import { Epilogue } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
 import {
@@ -10,17 +10,36 @@ import {
 } from "@mantine/core";
 import Footer from "@/components/Footer";
 
-const rosario = Rosario({ subsets: ["latin"] });
+const epilogue = Epilogue({ subsets: ["latin"] });
 
 const theme = createTheme({
   black: "#1e293b",
   white: "#f5f5f4",
-  fontFamily: rosario.style.fontFamily,
+  fontFamily: epilogue.style.fontFamily,
 });
 
 export const metadata: Metadata = {
-  title: "Fateseal",
-  description: "A Tabletop Simulator EDH deck exporter",
+  metadataBase: new URL("https://fateseal.com"),
+  title: "Fateseal | MTG Deck Converter for Tabletop Simulator",
+  description:
+    "Convert Magic: The Gathering Commander/EDH decklists to Tabletop Simulator format. Free deck testing tool supporting all Commander-legal cards, tokens, and double-faced cards.",
+  keywords:
+    "MTG, Magic The Gathering, EDH, Commander, Tabletop Simulator, TTS, deck converter, deck tester, deck builder, playtest",
+  openGraph: {
+    title: "Fateseal | MTG Deck Converter for Tabletop Simulator",
+    description:
+      "Convert Magic: The Gathering Commander/EDH decklists to Tabletop Simulator format. Free deck testing tool supporting all Commander-legal cards, tokens, and double-faced cards.",
+    type: "website",
+    url: "https://fateseal.com",
+    images: [
+      {
+        url: "/favicon.svg",
+        width: 128,
+        height: 128,
+        alt: "Fateseal MTG Deck Converter",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -29,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={epilogue.className}>
       <head>
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
