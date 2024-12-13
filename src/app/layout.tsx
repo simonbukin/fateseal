@@ -8,6 +8,7 @@ import {
   Container,
   createTheme,
 } from "@mantine/core";
+import Footer from "@/components/Footer";
 
 const rosario = Rosario({ subsets: ["latin"] });
 
@@ -33,13 +34,14 @@ export default function RootLayout({
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
       </head>
-      <body>
+      <body className="min-h-screen flex flex-col">
         <MantineProvider
           theme={theme}
           defaultColorScheme="light"
           forceColorScheme="light"
         >
-          <Container>{children}</Container>
+          <Container className="flex-1">{children}</Container>
+          <Footer />
         </MantineProvider>
       </body>
     </html>

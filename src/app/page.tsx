@@ -1,6 +1,5 @@
 import { Epilogue } from "next/font/google";
 import DeckEntry from "../components/DeckEntry";
-
 import InfoHoverCard from "@/components/InfoHoverCard";
 import FatesealLogo from "@/components/FatesealLogo";
 
@@ -16,7 +15,7 @@ export default function Home() {
               className={`${epilogue.className} relative my-8 text-5xl font-bold`}
             >
               fateseal
-              <div className="relative -top-5">
+              <div className="relative -top-4">
                 <InfoHoverCard />
               </div>
             </h1>
