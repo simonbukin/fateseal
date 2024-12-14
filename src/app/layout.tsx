@@ -52,6 +52,11 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
+        <script
+          data-goatcounter="https://fateseal.goatcounter.com/count"
+          async
+          src="//gc.zgo.at/count.js"
+        ></script>
       </head>
       <body className="min-h-screen flex flex-col">
         <MantineProvider
