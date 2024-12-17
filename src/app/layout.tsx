@@ -9,6 +9,7 @@ import {
   createTheme,
 } from "@mantine/core";
 import Footer from "@/components/Footer";
+import { CSPostHogProvider } from "./providers";
 
 const epilogue = Epilogue({ subsets: ["latin"] });
 
@@ -59,14 +60,16 @@ export default function RootLayout({
         ></script>
       </head>
       <body className="min-h-screen flex flex-col">
-        <MantineProvider
-          theme={theme}
-          defaultColorScheme="light"
-          forceColorScheme="light"
-        >
-          <Container className="flex-1">{children}</Container>
-          <Footer />
-        </MantineProvider>
+        <CSPostHogProvider>
+          <MantineProvider
+            theme={theme}
+            defaultColorScheme="light"
+            forceColorScheme="light"
+          >
+            <Container className="flex-1">{children}</Container>
+            <Footer />
+          </MantineProvider>
+        </CSPostHogProvider>
       </body>
     </html>
   );
