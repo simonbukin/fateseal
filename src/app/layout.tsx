@@ -59,8 +59,8 @@ export default function RootLayout({
           src="//gc.zgo.at/count.js"
         ></script>
       </head>
-      <body className="min-h-screen flex flex-col">
-        <CSPostHogProvider>
+      <CSPostHogProvider>
+        <body className="min-h-screen flex flex-col">
           <MantineProvider
             theme={theme}
             defaultColorScheme="light"
@@ -69,8 +69,8 @@ export default function RootLayout({
             <Container className="flex-1">{children}</Container>
             <Footer />
           </MantineProvider>
-        </CSPostHogProvider>
-      </body>
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
