@@ -24,7 +24,6 @@ jobs:
         
       - name: Download latest Scryfall data
         run: |
-          # Fetch the bulk data URL for all cards
           DOWNLOAD_URL=$(curl -s https://api.scryfall.com/bulk-data | jq -r '.data[] | select(.type=="all_cards") | .download_uri')
           echo "Downloading from: $DOWNLOAD_URL"
           curl -L -o processing/cards.json "$DOWNLOAD_URL"
@@ -32,7 +31,7 @@ jobs:
       - name: Process cards
         run: |
           cd processing
-          bun process.ts
+          NODE_OPTIONS="--max-old-space-size=8192" bun --debug process.ts 2>&1 | tee process.log
           
       - name: Move processed file
         run: |
@@ -58,3 +57,10 @@ jobs:
           labels: |
             automated
             dependencies
+          
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: process-logs
+          path: processing/process.log
