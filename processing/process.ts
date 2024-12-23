@@ -3,6 +3,12 @@ import { ScryfallCard } from "@scryfall/api-types";
 import { ScryfallLayout } from "@scryfall/api-types/src/objects/Card/values/Layout";
 
 function processCard(rawCard: ScryfallCard.Any): Print {
+  if (!rawCard?.id || !rawCard?.set || !rawCard?.collector_number) {
+    throw new Error(
+      `Missing required card properties: ${JSON.stringify(rawCard)}`
+    );
+  }
+
   const { id, set, collector_number, all_parts } = rawCard;
   let images: { front?: string; back?: string } = {};
   if ("image_uris" in rawCard && rawCard.image_uris) {
@@ -16,25 +22,23 @@ function processCard(rawCard: ScryfallCard.Any): Print {
     images.back = rawCard.card_faces[1]?.image_uris?.large;
   }
 
-  const foil = Boolean(rawCard.finishes.find((finish) => finish === "foil"));
-  const etched = Boolean(
-    rawCard.finishes.find((finish) => finish === "etched")
-  );
+  const finishes = rawCard.finishes || [];
+  const foil = finishes.includes("foil");
+  const etched = finishes.includes("etched");
 
   let associatedCards: AssociatedCard[] = [];
-  if (all_parts) {
-    const associatedCardsFiltered = all_parts.filter(
-      (part: AssociatedCard) => part.component !== "combo_piece"
-    );
-    associatedCards = associatedCardsFiltered.map((part: AssociatedCard) => {
-      const { id, name, component, uri } = part;
-      return {
+  if (Array.isArray(all_parts)) {
+    associatedCards = all_parts
+      .filter(
+        (part: AssociatedCard): part is AssociatedCard =>
+          part && typeof part === "object" && part.component !== "combo_piece"
+      )
+      .map(({ id, name, component, uri }) => ({
         id,
         name,
         component,
         uri,
-      };
-    });
+      }));
   }
 
   const print = {
@@ -68,19 +72,32 @@ const db: { [key: string]: FatesealCard } = {};
 
 englishCards.sort((a, b) => a.name.localeCompare(b.name));
 
-for (let i = 0; i < englishCards.length; i++) {
-  const card = englishCards[i];
-  const name = card.name;
+try {
+  const batchSize = 1000;
+  for (let i = 0; i < englishCards.length; i += batchSize) {
+    const batch = englishCards.slice(i, i + batchSize);
+    for (let i = 0; i < batch.length; i++) {
+      const card = batch[i];
+      const name = card.name;
 
-  if (!db[name]) {
-    db[name] = {
-      name,
-      prints: [],
-    };
+      if (!db[name]) {
+        db[name] = {
+          name,
+          prints: [],
+        };
+      }
+
+      const print = processCard(card);
+      db[name].prints.push(print);
+    }
+
+    if (global.gc) {
+      global.gc();
+    }
   }
-
-  const print = processCard(card);
-  db[name].prints.push(print);
+} catch (error) {
+  console.error("Processing failed:", error);
+  process.exit(1);
 }
 
 for (const [_, card] of Object.entries(db)) {
