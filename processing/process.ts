@@ -57,6 +57,8 @@ const file = Bun.file(import.meta.dir + "/cards.json");
 
 const cards: ScryfallCard.Any[] = await file.json();
 
+console.log(`Processing ${cards.length} cards...`);
+
 const englishCards = cards
   .filter((card) => card.lang === "en")
   .filter(
@@ -68,6 +70,8 @@ const englishCards = cards
       new Date(card.released_at) > new Date()
   );
 
+console.log(`Processing ${englishCards.length} English cards...`);
+
 const db: { [key: string]: FatesealCard } = {};
 
 englishCards.sort((a, b) => a.name.localeCompare(b.name));
@@ -76,6 +80,11 @@ try {
   const batchSize = 1000;
   for (let i = 0; i < englishCards.length; i += batchSize) {
     const batch = englishCards.slice(i, i + batchSize);
+    console.log(
+      `Processing batch ${i / batchSize + 1} of ${Math.ceil(
+        englishCards.length / batchSize
+      )}...`
+    );
     for (let i = 0; i < batch.length; i++) {
       const card = batch[i];
       const name = card.name;
@@ -92,6 +101,7 @@ try {
     }
 
     if (global.gc) {
+      console.log("Running garbage collection...");
       global.gc();
     }
   }
