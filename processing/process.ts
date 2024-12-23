@@ -77,33 +77,41 @@ const db: { [key: string]: FatesealCard } = {};
 englishCards.sort((a, b) => a.name.localeCompare(b.name));
 
 try {
-  const batchSize = 1000;
+  const batchSize = 100;
   for (let i = 0; i < englishCards.length; i += batchSize) {
     const batch = englishCards.slice(i, i + batchSize);
     console.log(
-      `Processing batch ${i / batchSize + 1} of ${Math.ceil(
+      `Processing batch ${Math.floor(i / batchSize) + 1} of ${Math.ceil(
         englishCards.length / batchSize
       )}...`
     );
-    for (let i = 0; i < batch.length; i++) {
-      const card = batch[i];
-      const name = card.name;
+    for (const card of batch) {
+      try {
+        const name = card.name;
+        if (!db[name]) {
+          db[name] = {
+            name,
+            prints: [],
+          };
+        }
 
-      if (!db[name]) {
-        db[name] = {
-          name,
-          prints: [],
-        };
+        const print = processCard(card);
+        db[name].prints.push(print);
+      } catch (cardError) {
+        console.error(
+          `Error processing card: ${card?.name || "unknown"}`,
+          cardError
+        );
+        continue;
       }
-
-      const print = processCard(card);
-      db[name].prints.push(print);
     }
 
     if (global.gc) {
       console.log("Running garbage collection...");
       global.gc();
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 } catch (error) {
   console.error("Processing failed:", error);
@@ -111,21 +119,38 @@ try {
 }
 
 for (const [_, card] of Object.entries(db)) {
-  for (const print of card.prints) {
-    if (print.associatedCards) {
-      for (let i = 0; i < print.associatedCards.length; i++) {
-        const associatedCard = print.associatedCards[i];
-        const card = db[associatedCard.name];
-        if (card) {
-          const printById = card.prints.find(
-            (print) => print.id === associatedCard.id
-          );
-          if (printById) {
-            associatedCard.images = printById.images;
+  try {
+    for (const print of card.prints) {
+      if (print.associatedCards?.length) {
+        for (const associatedCard of print.associatedCards) {
+          try {
+            const card = db[associatedCard.name];
+            if (card) {
+              const printById = card.prints.find(
+                (print) => print.id === associatedCard.id
+              );
+              if (printById) {
+                associatedCard.images = printById.images;
+              }
+            }
+          } catch (associatedError) {
+            console.error(
+              `Error processing associated card: ${
+                associatedCard?.name || "unknown"
+              }`,
+              associatedError
+            );
+            continue;
           }
         }
       }
     }
+  } catch (cardError) {
+    console.error(
+      `Error processing card relationships: ${card?.name || "unknown"}`,
+      cardError
+    );
+    continue;
   }
 }
 
