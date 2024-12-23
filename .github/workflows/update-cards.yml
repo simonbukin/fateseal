@@ -31,15 +31,12 @@ jobs:
       - name: Process cards
         run: |
           cd processing
-          NODE_OPTIONS="--max-old-space-size=8192" bun --debug process.ts 2>&1 | tee process.log
-          ls -la  # Debug: List files in processing directory
+          bun process.ts
           
       - name: Move processed file
         run: |
-          mkdir -p public 
-          ls -la processing/
           rm -f public/cards.json
-          mv processing/processed.json public/cards.json || echo "Move failed. File not found."
+          mv processing/processed.json public/cards.json 
           
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7

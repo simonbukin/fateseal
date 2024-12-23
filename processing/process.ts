@@ -129,7 +129,14 @@ for (const [_, card] of Object.entries(db)) {
   }
 }
 
-await Bun.write(
-  import.meta.dir + "/processed.json",
-  JSON.stringify(db, null, 2)
-);
+try {
+  const outputPath = import.meta.dir + "/processed.json";
+  console.log(`Writing processed data to: ${outputPath}`);
+  await Bun.write(outputPath, JSON.stringify(db, null, 2));
+  console.log(
+    `Successfully wrote processed data (${Object.keys(db).length} cards)`
+  );
+} catch (error) {
+  console.error("Failed to write processed data:", error);
+  process.exit(1);
+}
