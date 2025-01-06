@@ -38,7 +38,8 @@ jobs:
       - name: Move processed file
         run: |
           rm -f public/cards.json
-          mv processing/processed.json public/cards.json 
+          mv processing/processed.json public/cards.json
+          echo "{\"lastUpdated\": \"$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")\"}" > public/last-updated.json
           
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7

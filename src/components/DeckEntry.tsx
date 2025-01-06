@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Image, Textarea, TextInput } from "@mantine/core";
+import { Button, Textarea, TextInput } from "@mantine/core";
 import { deckToObjects } from "@/utils/ttExport";
 import MTGCard from "./MTGCard";
 import { BasicCard, RawCard, FatesealCard } from "@/types/cards";
 import { CardError, decklistToCards, parseDeckList } from "@/utils/deck";
 import Fuse from "fuse.js";
+import { LastUpdated } from "./LastUpdated";
 
 export type CardData = { [card: string]: FatesealCard };
 
@@ -155,21 +156,25 @@ function DeckEntry() {
         label="Your deck's name"
         onChange={(e) => setDeckName(e.target.value)}
       />
-      <Textarea
-        value={deckList}
-        onChange={(e) => setDeckList(e.target.value)}
-        size="md"
-        autosize
-        disabled={!Boolean(cardData)}
-        minRows={5}
-        label={`Your decklist ${
-          cards.length > 0
-            ? `• (${cards.length} cards, ${extras.length} tokens, ${errorCards.length} errors)`
-            : ""
-        }`}
-        description="Paste your decklist below, in the MTGO format. You can include a set name and collector number as well."
-        placeholder={`1 Imperial Recruiter\n2 Mountain (SLD) 1193\n• • • `}
-      />
+      <div className="relative flex flex-row justify-between">
+        <Textarea
+          value={deckList}
+          onChange={(e) => setDeckList(e.target.value)}
+          size="md"
+          autosize
+          disabled={!Boolean(cardData)}
+          minRows={5}
+          label={`Your decklist ${
+            cards.length > 0
+              ? `• (${cards.length} cards, ${extras.length} tokens, ${errorCards.length} errors)`
+              : ""
+          }`}
+          description="Paste your decklist below, in the MTGO format. You can include a set name and collector number as well."
+          placeholder={`1 Imperial Recruiter\n2 Mountain (SLD) 1193\n• • • `}
+        />
+        <LastUpdated />
+      </div>
+
       <TextInput
         placeholder="https://example.com/path/to/your/image.jpg"
         value={customBackUrl}
