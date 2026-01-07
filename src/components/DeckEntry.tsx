@@ -155,47 +155,48 @@ function DeckEntry() {
     }
   }
 
-  async function fixError(errorCard: CardError, index: number): Promise<void> {
-    if (!errorCard.fix) return;
+  async function fixError(errorCard: CardError): Promise<void> {
+    if (!errorCard.fix || !cardData) return;
 
+    // Parse the current decklist
     const decklist = parseDeckList(
       deckList.split("\n").filter((line) => line.length !== 0)
     );
 
-    decklist.forEach((card) => {
-      if (
-        card.name.toLowerCase() === errorCard.card.name.toLowerCase() &&
-        errorCard.fix
-      ) {
-        card.name = errorCard.fix;
-        card.quantity = errorCard.card.quantity;
-        errorCard.card.quantity = 0;
+    // Create a new decklist with the fix applied (no mutation)
+    const fixedDecklist: RawCard[] = decklist.map((card) => {
+      if (card.name.toLowerCase() === errorCard.card.name.toLowerCase()) {
+        // Apply the fix: replace error card name with the correct name
+        // Preserve all other properties (set, collectorNumber, foil, etched)
+        return {
+          ...card,
+          name: errorCard.fix!,
+        };
       }
+      return card;
     });
 
-    const filteredDecklist = decklist.filter((card) => card.quantity > 0);
-
-    const updatedDeckList = filteredDecklist
-      .map(
-        (card) =>
-          `${card.quantity} ${card.name}${
-            card.set ? ` (${card.set.toUpperCase()})` : ""
-          }${card.collectorNumber ? card.collectorNumber.toUpperCase() : ""}`
-      )
-      .join("\n");
-
+    // Use the utility function to rebuild the decklist string
+    // This correctly handles spacing, set codes, collector numbers, and foil/etched flags
+    const updatedDeckList = rawDeckToDeckListString(fixedDecklist);
     setDeckList(updatedDeckList);
 
-    if (!cardData) return;
+    // Re-parse and get new cards/errors
+    const {
+      resultingCards,
+      extraCards,
+      errorCards: newErrorCards,
+    } = decklistToCards(fixedDecklist, cardData);
 
-    const { resultingCards, extraCards, errorCards } = decklistToCards(
-      filteredDecklist,
-      cardData
-    );
+    // Populate fix suggestions for remaining errors
+    newErrorCards.forEach((newErrorCard) => {
+      const result = fuse?.search(newErrorCard.card.name)[0];
+      newErrorCard.fix = result?.item;
+    });
 
     setCards(resultingCards);
     setExtras(extraCards);
-    setErrorCards(errorCards.filter((_, i) => i !== index));
+    setErrorCards(newErrorCards);
   }
 
   return (
@@ -306,7 +307,7 @@ function DeckEntry() {
               >
                 <p className="text-red-500">{displayCardError(errorCard)}</p>
                 <Button
-                  onClick={() => fixError(errorCard, i)}
+                  onClick={() => fixError(errorCard)}
                   variant="gradient"
                   gradient={{ from: "yellow", to: "orange", deg: 90 }}
                   size="md"

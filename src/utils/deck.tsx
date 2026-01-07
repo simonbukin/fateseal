@@ -179,7 +179,7 @@ export function rawDeckToDeckListString(deck: RawCard[]): string {
   const cardCounts: { [key: string]: number } = {};
 
   deck.forEach((card) => {
-    const key = `${card.name}|${card.set || ""}|${card.collectorNumber || ""}`;
+    const key = `${card.name}|${card.set || ""}|${card.collectorNumber || ""}|${card.foil ? "F" : ""}|${card.etched ? "E" : ""}`;
     if (cardCounts[key]) {
       cardCounts[key]++;
     } else {
@@ -189,13 +189,19 @@ export function rawDeckToDeckListString(deck: RawCard[]): string {
 
   return Object.entries(cardCounts)
     .map(([key, quantity]) => {
-      const [name, set, collectorNumber] = key.split("|");
+      const [name, set, collectorNumber, foil, etched] = key.split("|");
       let line = `${quantity} ${name}`;
       if (set) {
         line += ` (${set.toUpperCase()})`;
       }
       if (collectorNumber) {
         line += ` ${collectorNumber.toUpperCase()}`;
+      }
+      if (foil === "F") {
+        line += ` *F*`;
+      }
+      if (etched === "E") {
+        line += ` *E*`;
       }
       return line;
     })
