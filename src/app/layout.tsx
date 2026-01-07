@@ -49,9 +49,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={epilogue.className}>
+    <html lang="en" className={epilogue.className} suppressHydrationWarning>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript forceColorScheme="light" />
         <link rel="shortcut icon" href="/favicon.svg" />
         <script
           data-goatcounter="https://fateseal.goatcounter.com/count"

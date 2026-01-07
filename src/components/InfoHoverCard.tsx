@@ -8,7 +8,7 @@ function InfoHoverCard() {
     <div className="flex flex-col gap-1">
       <HoverCard width={350} shadow="md">
         <HoverCard.Target>
-          <p className="mb-0 text-lg font-semibold text-slate-400">
+          <p className="mb-0 mt-[10px] text-lg font-semibold text-slate-400">
             what is this?
           </p>
         </HoverCard.Target>

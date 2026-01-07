@@ -109,7 +109,13 @@ export function decklistToCards(
       continue;
     }
 
-    const print = searchPrint(result.prints, card.set, card.collectorNumber);
+    const print = searchPrint(
+      result.prints,
+      card.set,
+      card.collectorNumber,
+      card.foil,
+      card.etched
+    );
 
     const resultingCard: BasicCard = {
       name: result.name,
@@ -117,6 +123,8 @@ export function decklistToCards(
         front: print.images.front,
         back: print.images.back,
       },
+      foil: print.foil,
+      etched: print.etched,
     };
     resultingCards.push(resultingCard);
 
@@ -165,4 +173,31 @@ function searchPrint(
     prints_ = prints_.filter((print) => print.etched);
   }
   return prints_[0] ? prints_[0] : defaultPrint;
+}
+
+export function rawDeckToDeckListString(deck: RawCard[]): string {
+  const cardCounts: { [key: string]: number } = {};
+
+  deck.forEach((card) => {
+    const key = `${card.name}|${card.set || ""}|${card.collectorNumber || ""}`;
+    if (cardCounts[key]) {
+      cardCounts[key]++;
+    } else {
+      cardCounts[key] = 1;
+    }
+  });
+
+  return Object.entries(cardCounts)
+    .map(([key, quantity]) => {
+      const [name, set, collectorNumber] = key.split("|");
+      let line = `${quantity} ${name}`;
+      if (set) {
+        line += ` (${set.toUpperCase()})`;
+      }
+      if (collectorNumber) {
+        line += ` ${collectorNumber.toUpperCase()}`;
+      }
+      return line;
+    })
+    .join("\n");
 }

@@ -1,13 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Textarea, TextInput } from "@mantine/core";
+import { Box, Button, LoadingOverlay, Textarea, TextInput } from "@mantine/core";
 import { deckToObjects } from "@/utils/ttExport";
 import MTGCard from "./MTGCard";
-import { BasicCard, RawCard, FatesealCard } from "@/types/cards";
-import { CardError, decklistToCards, parseDeckList } from "@/utils/deck";
+import { BasicCard, RawCard, FatesealCard, Print } from "@/types/cards";
+import {
+  CardError,
+  decklistToCards,
+  parseDeckList,
+  rawDeckToDeckListString,
+} from "@/utils/deck";
 import Fuse from "fuse.js";
 import { LastUpdated } from "./LastUpdated";
+import CardSelector from "./CardSelector";
 
 export type CardData = { [card: string]: FatesealCard };
 
@@ -15,6 +21,7 @@ function DeckEntry() {
   const [deckList, setDeckList] = useState("");
   const [deckName, setDeckName] = useState("");
   const [cards, setCards] = useState<BasicCard[]>([]);
+  const [rawDeck, setRawDeck] = useState<RawCard[]>([]);
   const [extras, setExtras] = useState<BasicCard[]>([]);
   const [errorCards, setErrorCards] = useState<CardError[]>([]);
   const [cardData, setCardData] = useState<CardData>();
@@ -23,6 +30,13 @@ function DeckEntry() {
   const [customCommanderUrl, setCustomCommanderUrl] = useState("");
   const [customBackError, setCustomBackError] = useState(false);
   const [commanderError, setCommanderError] = useState(false);
+  const [isSelectorOpen, setSelectorOpen] = useState(false);
+  const [selectedCardForPrinting, setSelectedCardForPrinting] = useState<
+    string | null
+  >(null);
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,12 +62,50 @@ function DeckEntry() {
     fetchData();
   }, []);
 
+  function handleCardClick(card: BasicCard, index: number) {
+    if (card.name === "Custom Commander") return;
+    setSelectedCardForPrinting(card.name);
+    setSelectedCardIndex(index);
+    setSelectorOpen(true);
+  }
+
+  function handlePrintingSelect(print: Print) {
+    if (selectedCardIndex === null) return;
+
+    const newCards = [...cards];
+    newCards[selectedCardIndex] = {
+      ...newCards[selectedCardIndex],
+      images: print.images,
+      foil: print.foil,
+      etched: print.etched,
+    };
+    setCards(newCards);
+
+    const newRawDeck = [...rawDeck];
+    newRawDeck[selectedCardIndex] = {
+      ...newRawDeck[selectedCardIndex],
+      set: print.set,
+      collectorNumber: print.collectorNumber,
+      foil: print.foil,
+      etched: print.etched,
+    };
+    setRawDeck(newRawDeck);
+
+    const newDeckList = rawDeckToDeckListString(newRawDeck);
+    setDeckList(newDeckList);
+
+    setSelectorOpen(false);
+    setSelectedCardForPrinting(null);
+    setSelectedCardIndex(null);
+  }
+
   function handleParseClick() {
     if (!cardData) return;
 
     const parsedDecklist: RawCard[] = parseDeckList(
       deckList.split("\n").filter((line) => line.length !== 0)
     );
+    setRawDeck(parsedDecklist);
 
     const { resultingCards, extraCards, errorCards } = decklistToCards(
       parsedDecklist,
@@ -156,7 +208,22 @@ function DeckEntry() {
         label="Your deck's name"
         onChange={(e) => setDeckName(e.target.value)}
       />
-      <div className="relative flex flex-row justify-between">
+      <Box pos="relative">
+        <LoadingOverlay
+          visible={!cardData}
+          zIndex={10}
+          overlayProps={{ radius: "sm", blur: 2 }}
+          loaderProps={{
+            children: (
+              <div className="text-center">
+                <div className="mb-2">Loading card database...</div>
+                <div className="text-sm text-gray-500">
+                  This may take a moment
+                </div>
+              </div>
+            ),
+          }}
+        />
         <Textarea
           value={deckList}
           onChange={(e) => setDeckList(e.target.value)}
@@ -164,6 +231,7 @@ function DeckEntry() {
           autosize
           disabled={!Boolean(cardData)}
           minRows={5}
+          maxRows={15}
           label={`Your decklist ${
             cards.length > 0
               ? `• (${cards.length} cards, ${extras.length} tokens, ${errorCards.length} errors)`
@@ -173,7 +241,7 @@ function DeckEntry() {
           placeholder={`1 Imperial Recruiter\n2 Mountain (SLD) 1193\n• • • `}
         />
         <LastUpdated />
-      </div>
+      </Box>
 
       <TextInput
         placeholder="https://example.com/path/to/your/image.jpg"
@@ -274,6 +342,13 @@ function DeckEntry() {
       >
         Export
       </Button>
+      <CardSelector
+        isOpen={isSelectorOpen}
+        onClose={() => setSelectorOpen(false)}
+        cardName={selectedCardForPrinting}
+        cardData={cardData}
+        onSelectPrinting={handlePrintingSelect}
+      />
       {cards && (
         <ul
           style={{
@@ -294,7 +369,12 @@ function DeckEntry() {
                     : ""
                 }
               >
-                <MTGCard card={card} />
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleCardClick(card, i)}
+                >
+                  <MTGCard card={card} />
+                </div>
               </li>
             );
           })}

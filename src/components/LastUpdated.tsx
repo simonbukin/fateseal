@@ -20,7 +20,7 @@ export function LastUpdated() {
   if (!lastUpdated) return null;
 
   return (
-    <div className="absolute right-2 bottom-0">
+    <div className="absolute right-3 bottom-3">
       <Tooltip label={`Card database last updated ${lastUpdated}`}>
         <Clock
           size={20}

@@ -42,4 +42,6 @@ export type BasicCard = {
     front?: string;
     back?: string;
   };
+  foil?: boolean;
+  etched?: boolean;
 };

@@ -8,7 +8,7 @@ const epilogue = Epilogue({ subsets: ["latin"] });
 export default function Home() {
   return (
     <div className="grid place-content-center">
-      <div className="mt-10 flex max-w-[25rem] flex-col items-center justify-center">
+      <div className="mt-10 flex max-w-100 flex-col items-center justify-center">
         <div className="flex w-full flex-row justify-between gap-4">
           <div>
             <h1
