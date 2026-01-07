@@ -37,6 +37,7 @@ export type RawCard = {
 };
 
 export type BasicCard = {
+  id: string;
   name: string;
   images: {
     front?: string;

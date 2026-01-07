@@ -1,7 +1,5 @@
-"use client";
-
 import { HoverCard, Text } from "@mantine/core";
-import Link from "next/link";
+import { Link } from "wouter";
 
 function InfoHoverCard() {
   return (

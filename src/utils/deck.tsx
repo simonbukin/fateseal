@@ -92,6 +92,11 @@ export function decklistToCards(
   const errorCards: CardError[] = [];
   const resultingCards: BasicCard[] = [];
   const extraCards: BasicCard[] = [];
+
+  // Track counts for stable ID generation
+  const cardCounts: { [name: string]: number } = {};
+  const extraCounts: { [name: string]: number } = {};
+
   for (const card of decklist) {
     const result = cardData[card.name];
     if (!result) {
@@ -117,7 +122,13 @@ export function decklistToCards(
       card.etched
     );
 
+    // Generate stable ID based on card name and occurrence count
+    const normalizedName = result.name.toLowerCase().replace(/[^a-z0-9]/g, "-");
+    cardCounts[normalizedName] = (cardCounts[normalizedName] || 0) + 1;
+    const stableId = `card-${normalizedName}-${cardCounts[normalizedName]}`;
+
     const resultingCard: BasicCard = {
+      id: stableId,
       name: result.name,
       images: {
         front: print.images.front,
@@ -131,7 +142,12 @@ export function decklistToCards(
     const basicExtraCards: BasicCard[] = [];
     if (print.associatedCards) {
       print.associatedCards.forEach((associatedCard) => {
+        const normalizedExtraName = associatedCard.name.toLowerCase().replace(/[^a-z0-9]/g, "-");
+        extraCounts[normalizedExtraName] = (extraCounts[normalizedExtraName] || 0) + 1;
+        const extraId = `extra-${normalizedExtraName}-${extraCounts[normalizedExtraName]}`;
+
         basicExtraCards.push({
+          id: extraId,
           name: associatedCard.name,
           images: associatedCard.images || {
             front: "https://i.imgur.com/Hg8CwwU.jpeg",

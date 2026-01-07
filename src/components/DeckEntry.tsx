@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Box, Button, LoadingOverlay, Textarea, TextInput } from "@mantine/core";
 import { deckToObjects } from "@/utils/ttExport";
@@ -114,6 +112,7 @@ function DeckEntry() {
 
     if (customCommanderUrl) {
       resultingCards.unshift({
+        id: "custom-commander",
         name: "Custom Commander",
         images: {
           front: customCommanderUrl,

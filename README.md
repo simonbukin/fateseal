@@ -50,4 +50,5 @@ $ jq 'reduce .[] as $item ({};
 
 ## Acknowledgements
 
-MTG-related SVGs courtesy of [Investigamer/mtg-vectors](https://github.com/Investigamer/mtg-vectors)
+- MTG-related SVGs courtesy of [Investigamer/mtg-vectors](https://github.com/Investigamer/mtg-vectors)
+- Holographic foil card effect inspired by [simeydotme/pokemon-cards-css](https://github.com/simeydotme/pokemon-cards-css)

@@ -1,5 +1,5 @@
 import { Title, Text, Container } from "@mantine/core";
-import Link from "next/link";
+import { Link } from "wouter";
 
 export default function FAQPage() {
   return (
@@ -8,7 +8,7 @@ export default function FAQPage() {
         href="/"
         className="text-purple-600 hover:text-purple-800 transition-colors mb-8 block"
       >
-        ← Back to deck builder
+        &larr; Back to deck builder
       </Link>
 
       <Title order={1} className="mb-12 text-slate-700">
@@ -111,11 +111,15 @@ export default function FAQPage() {
                 <strong>macOS:</strong> ~/Library/Tabletop Simulator/Saves/Saved
                 Objects
               </li>
+              <li>
+                <strong>Linux:</strong> ~/.local/share/Tabletop
+                Simulator/Saves/Saved Objects
+              </li>
             </ul>
             <p>To load the deck in-game:</p>
             <ol className="list-decimal pl-6 space-y-2">
               <li>Host or join a game</li>
-              <li>In the top bar, click Objects → Saved Objects</li>
+              <li>In the top bar, click Objects &rarr; Saved Objects</li>
               <li>Select your deck file</li>
               <li>
                 If you have tokens / extra cards, they will appear in a separate

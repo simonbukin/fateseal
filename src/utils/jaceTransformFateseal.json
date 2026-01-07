@@ -1,5 +1,6 @@
 [
   {
+    "id": "test-jace-1",
     "name": "Jace, Vryn's Prodigy // Jace, Telepath Unbound",
     "images": {
       "front": "https://cards.scryfall.io/large/front/c/c/cc750c64-fd83-4b7b-9a40-a99213e6fa6d.jpg?1562702327",
@@ -7,6 +8,7 @@
     }
   },
   {
+    "id": "test-growing-rites-2",
     "name": "Growing Rites of Itlimoc // Itlimoc, Cradle of the Sun",
     "images": {
       "front": "https://cards.scryfall.io/large/front/3/8/38b45fa7-ccbc-4fdc-9ba5-117f7671d056.jpg?1673182729",

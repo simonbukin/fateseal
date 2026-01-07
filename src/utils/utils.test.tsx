@@ -17,6 +17,7 @@ import {
 import { BasicCard, RawCard } from "@/types/cards";
 
 const adelineScryfall: BasicCard = {
+  id: "test-adeline-1",
   name: "Adeline, Resplendent Cathar",
   images: {
     front:
@@ -25,6 +26,7 @@ const adelineScryfall: BasicCard = {
 };
 
 const growingRitesScryfall: BasicCard = {
+  id: "test-growing-rites-1",
   name: "Growing Rites of Itlimoc // Itlimoc, Cradle of the Sun",
   images: {
     front:
@@ -123,7 +125,8 @@ describe("ttExport.tsx", () => {
 
     it("handles transform cards correctly", () => {
       const transformCard: BasicCard = {
-        ...adelineScryfall,
+        id: "test-transform-1",
+        name: adelineScryfall.name,
         images: {
           ...adelineScryfall.images,
           back: "https://example.com/back.jpg",
