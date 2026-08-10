@@ -71,21 +71,13 @@ async function processLargeFile() {
   });
 
   const db: { [key: string]: FatesealCard } = {};
-  let isFirstLine = true;
   let cardCount = 0;
+  let parseErrors = 0;
 
+  // Scryfall bulk data is JSONL: one complete card object per line, no wrapper.
   for await (const line of rl) {
-    if (isFirstLine) {
-      // Skip the opening bracket
-      isFirstLine = false;
-      continue;
-    }
-
-    // Remove trailing comma if present
-    const cleanLine = line.trim().replace(/,$/, "");
-
-    // Skip empty lines and the closing bracket
-    if (cleanLine === "" || cleanLine === "]") continue;
+    const cleanLine = line.trim();
+    if (cleanLine === "") continue;
 
     try {
       const card: ScryfallCard.Any = JSON.parse(cleanLine);
@@ -115,7 +107,10 @@ async function processLargeFile() {
         }
       }
     } catch (error) {
-      console.error("Error processing line:", error);
+      // Log the first few in full; after that just count, so a systemic
+      // format change doesn't produce millions of lines of output.
+      if (parseErrors < 10) console.error("Error processing line:", error);
+      parseErrors++;
       continue;
     }
 
@@ -127,6 +122,20 @@ async function processLargeFile() {
   }
 
   console.log(`Finished initial processing. Total cards: ${cardCount}`);
+  if (parseErrors > 0) console.warn(`Skipped ${parseErrors} unparseable lines.`);
+
+  // Sanity gate: if the upstream format shifts again, we'd otherwise write an
+  // empty database and happily open a PR that deletes the whole card list.
+  const MIN_EXPECTED_CARDS = 50_000;
+  if (cardCount < MIN_EXPECTED_CARDS) {
+    console.error(
+      `Refusing to write: only ${cardCount} cards passed filtering, expected at ` +
+        `least ${MIN_EXPECTED_CARDS}. This usually means the input format changed. ` +
+        `(${parseErrors} lines failed to parse.)`
+    );
+    process.exit(1);
+  }
+
   console.log("Processing associated cards...");
 
   // Process associated cards
@@ -169,7 +178,8 @@ async function processLargeFile() {
   try {
     const outputPath = path.join(__dirname, "processed.json");
     console.log(`Writing processed data to: ${outputPath}`);
-    await fs.writeFile(outputPath, JSON.stringify(db, null, 2), "utf-8");
+    // Minified: this file ships to the browser, and the indentation was ~30% of it.
+    await fs.writeFile(outputPath, JSON.stringify(db), "utf-8");
     console.log(
       `Successfully wrote processed data (${Object.keys(db).length} cards)`
     );

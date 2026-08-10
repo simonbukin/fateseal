@@ -8,6 +8,7 @@
 
 /processing/processed.json
 /processing/cards.json
+/processing/process.log
 
 # testing
 /coverage
