@@ -22,19 +22,25 @@ jobs:
           node-version: '20'
         
       - name: Install dependencies
-        run: npm install
-        
+        run: npm ci
+
       - name: Download latest Scryfall data
         run: |
-          DOWNLOAD_URL=$(curl -s https://api.scryfall.com/bulk-data | jq -r '.data[] | select(.type=="all_cards") | .download_uri')
+          DOWNLOAD_URL=$(curl -sf https://api.scryfall.com/bulk-data \
+            | jq -er '.data[] | select(.type=="all_cards") | .jsonl_download_uri')
           echo "Downloading from: $DOWNLOAD_URL"
-          curl -L -o processing/cards.json "$DOWNLOAD_URL"
-          
+          # Bulk files are gzipped JSONL; stream-decompress so we never hold both on disk.
+          curl -fL --retry 3 --retry-delay 5 "$DOWNLOAD_URL" | gunzip -c > processing/cards.json
+          wc -l processing/cards.json
+
       - name: Process cards
         run: |
           cd processing
-          npx tsx process.ts
-          
+          # Tee to process.log so the upload-artifact step below has something to collect,
+          # while keeping output visible in the run. pipefail keeps tsx's exit code.
+          set -o pipefail
+          npx tsx process.ts 2>&1 | tee process.log
+
       - name: Move processed file
         run: |
           rm -f public/cards.json
@@ -67,3 +73,4 @@ jobs:
         with:
           name: process-logs
           path: processing/process.log
+          if-no-files-found: warn
